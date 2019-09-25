@@ -42,7 +42,7 @@ func create_path(start,end):
 
 func _input(event):
 	if event is InputEventMouseButton:
-		pc.change_state(0)
+		#pc.change_state(0)
 		var new_end_point = get_global_mouse_position() 
 		var new_start_point = pc.position
 		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
