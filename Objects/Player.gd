@@ -43,7 +43,10 @@ func _process(delta):
 
 # function to change animation state externally
 func change_state(state):
-	crnt_state = state	
+	crnt_state = state
+	$AnimatedSprite.set_animation(anim[crnt_state])	
+	$AnimatedSprite.play()
+
 	
 # Returns PathFollower posito the begining of the 2DPath
 func reset_pos():

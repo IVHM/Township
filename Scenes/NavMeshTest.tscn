@@ -33,6 +33,7 @@ curve = SubResource( 1 )
 script = ExtResource( 3 )
 
 [node name="Player" parent="MousePath" instance=ExtResource( 4 )]
+position = Vector2( 0.754707, -0.377354 )
 type = "player"
 speed = 40
 anim = [ "Idle", "Walking", "Talking", "Waving" ]

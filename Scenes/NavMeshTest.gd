@@ -27,10 +27,8 @@ func create_path(start,end):
 	for i in new_path:
 		new_curve.add_point(i)
 	
-	cur_path.get_curve().clear_points()
-	cur_path.get_curve().add_point(pos)
-	pc.reset_pos()
 	cur_path.set_curve(new_curve)
+	pc.reset_pos()
 	pc.change_state(1)
 
 
