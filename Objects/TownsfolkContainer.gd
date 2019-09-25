@@ -33,8 +33,9 @@ func _process(delta):
 
 # function to change animation state externally
 func change_state(state):
-	crnt_state = state
-	$AnimatedSprite.set_animation(anim[crnt_state])	
+	if crnt_state != state:
+		crnt_state = state
+		$AnimatedSprite.set_animation(anim[crnt_state])	
 	
 # Returns PathFollower posito the begining of the 2DPath
 func reset_pos():
@@ -44,7 +45,7 @@ func reset_pos():
 # Handles interactions with other 2DAreas
 func _on_Area2D_area_entered(body):
 	print("collision detected (area)")
-	if !transition:
+	if !transition  and body.type == OK:
 		if body.type == "Interaction":
 			crnt_state = rnd.randi_range(2,3)
 			$AnimatedSprite.set_animation(anim[crnt_state])
