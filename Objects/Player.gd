@@ -13,12 +13,14 @@ export var repeat_chance = .6
 
 export var personal_name = "Choose-name"
 export var health = 100
-export var gold = 100
-export var stone = 0
-export var wood = 0 
 
+export var inventory = {'gold': 100, 'wood': 100, 'stone': 50}
 
-
+# INTERACTION VARIABLES
+var near_resource = false
+var resource = null
+onready var mining_timer = $MiningTimer
+export var mining_timer_len = .8
 var transition = false
 var showing = true  # Are we displaying this peasent yet?
 var rnd = RandomNumberGenerator.new()
@@ -31,6 +33,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+
 	if crnt_state == 1:  # Walking
 		if self.unit_offset >= .99:
 			crnt_state = 0
@@ -56,9 +59,14 @@ func reset_pos():
 # Handles interactions with other 2DAreas
 func _on_Area2D_area_entered(body):
 	
-	if body.type == OK:
-		if body.type = "stone"
-	
+
+	if body.type == "harvestable object":
+		print("near stone", body)
+		if body.alive:
+			self.near_resource = true
+			resource = body
+			mine(body)
+
 	
 	var a = false # Functionality currently disabled
 	if a:
@@ -79,6 +87,9 @@ func _on_Area2D_area_entered(body):
 
 func _on_Area2D_area_exited(body):
 	transition = false
+	if body.type == "harvestable object":
+		print("left stone", body)
+		self.near_resource = false
 
 # Buffer for collision detection and animation selection
 func _on_InteractionTimer_timeout():
@@ -87,4 +98,23 @@ func _on_InteractionTimer_timeout():
 	
 	crnt_state = 1
 	$AnimatedSprite.set_animation(anim[crnt_state])
-	
+
+func mine(body):
+	body.take_hit(10, self)
+	if body.alive:
+		mining_timer.start(mining_timer_len)
+	else:
+		near_resource = false
+
+func _on_MiningTimer_timeout():
+	if near_resource:
+		mine(resource)
+			
+
+func transfer(inventory_in):
+	print("transfering", inventory_in)
+	for i in inventory_in:
+		if i in inventory.keys():
+			inventory[i] += inventory_in[i]
+		else:
+			inventory[i] = inventory_in[i]
