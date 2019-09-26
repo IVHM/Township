@@ -2,6 +2,7 @@ extends Node2D
 
 export var def_start = Vector2(0,0)
 export var def_end = Vector2(70,50)
+onready var nav_tile = $TileNavigation
 onready var cur_path = $MousePath
 onready var pc = $MousePath/Player
 
@@ -15,9 +16,20 @@ func _ready():
 func _process(delta):
 	pass
 
+
+# PATH GENERATION FROM MOUSE INPUT
+# 	Requires a TileNavigation node as well as a Path2D node
+func _input(event):
+	if event is InputEventMouseButton:
+		#pc.change_state(0)
+		var new_end_point = get_global_mouse_position() 
+		var new_start_point = pc.position
+		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
+		create_path(new_start_point, new_end_point)			
+
 func create_path(start,end):
 	print("\n\n----\n--\n--\nCreating path")
-	var new_path = $TileNavigation.get_simple_path(start,end)
+	var new_path = nav_tiles.get_simple_path(start,end)
 #	var last_curve = cur_path.get_curve()
 	var new_curve = Curve2D.new()
 
@@ -30,21 +42,8 @@ func create_path(start,end):
 	cur_path.set_curve(new_curve)
 	pc.reset_pos()
 	pc.change_state(1)
-
-
-
-
-
 	
 #	cur_path.set_curve(new_curve)
 #	pc.reset_pos()
 #	pc.change_state(1)
 
-func _input(event):
-	if event is InputEventMouseButton:
-		#pc.change_state(0)
-		var new_end_point = get_global_mouse_position() 
-		var new_start_point = pc.position
-		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
-		create_path(new_start_point, new_end_point)
-		

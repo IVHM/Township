@@ -55,7 +55,12 @@ func reset_pos():
 
 # Handles interactions with other 2DAreas
 func _on_Area2D_area_entered(body):
-	var a = false
+	
+	if body.type == OK:
+		if body.type = "stone"
+	
+	
+	var a = false # Functionality currently disabled
 	if a:
 		print("collision detected (area)")
 		if !transition:
