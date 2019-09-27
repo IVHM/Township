@@ -1,122 +1,47 @@
-[gd_scene load_steps=63 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Objects/Player.gd" type="Script" id=1]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking1.png" type="Texture" id=2]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking2.png" type="Texture" id=3]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking3.png" type="Texture" id=4]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking4.png" type="Texture" id=5]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking5.png" type="Texture" id=6]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking6.png" type="Texture" id=7]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking7.png" type="Texture" id=8]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking8.png" type="Texture" id=9]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking9.png" type="Texture" id=10]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking10.png" type="Texture" id=11]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking11.png" type="Texture" id=12]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking12.png" type="Texture" id=13]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking13.png" type="Texture" id=14]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking14.png" type="Texture" id=15]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking15.png" type="Texture" id=16]
-[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking16.png" type="Texture" id=17]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving1.png" type="Texture" id=18]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving2.png" type="Texture" id=19]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving3.png" type="Texture" id=20]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving4.png" type="Texture" id=21]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving5.png" type="Texture" id=22]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving6.png" type="Texture" id=23]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving7.png" type="Texture" id=24]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving8.png" type="Texture" id=25]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving9.png" type="Texture" id=26]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving10.png" type="Texture" id=27]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving11.png" type="Texture" id=28]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving12.png" type="Texture" id=29]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving13.png" type="Texture" id=30]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving14.png" type="Texture" id=31]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving15.png" type="Texture" id=32]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving16.png" type="Texture" id=33]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving17.png" type="Texture" id=34]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving18.png" type="Texture" id=35]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving19.png" type="Texture" id=36]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving20.png" type="Texture" id=37]
-[ext_resource path="res://Assets/townsfolk/Waving/townsfolk_waving21.png" type="Texture" id=38]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking1.png" type="Texture" id=39]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking2.png" type="Texture" id=40]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking3.png" type="Texture" id=41]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking4.png" type="Texture" id=42]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking5.png" type="Texture" id=43]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking6.png" type="Texture" id=44]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking7.png" type="Texture" id=45]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking8.png" type="Texture" id=46]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking9.png" type="Texture" id=47]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking10.png" type="Texture" id=48]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking11.png" type="Texture" id=49]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking12.png" type="Texture" id=50]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking13.png" type="Texture" id=51]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking14.png" type="Texture" id=52]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking15.png" type="Texture" id=53]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking16.png" type="Texture" id=54]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking17.png" type="Texture" id=55]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking18.png" type="Texture" id=56]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking19.png" type="Texture" id=57]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking20.png" type="Texture" id=58]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking21.png" type="Texture" id=59]
-[ext_resource path="res://Assets/townsfolk/Talking/townfolk_talking22.png" type="Texture" id=60]
 
-[sub_resource type="SpriteFrames" id=1]
-animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
-"loop": true,
-"name": "Walking",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 33 ), ExtResource( 34 ), ExtResource( 35 ), ExtResource( 36 ), ExtResource( 37 ), ExtResource( 38 ) ],
-"loop": true,
-"name": "Waving",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 39 ), ExtResource( 40 ), ExtResource( 41 ), ExtResource( 42 ), ExtResource( 43 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 46 ), ExtResource( 47 ), ExtResource( 48 ), ExtResource( 49 ), ExtResource( 50 ), ExtResource( 51 ), ExtResource( 52 ), ExtResource( 53 ), ExtResource( 54 ), ExtResource( 55 ), ExtResource( 56 ), ExtResource( 57 ), ExtResource( 58 ), ExtResource( 59 ), ExtResource( 60 ) ],
-"loop": true,
-"name": "Talking",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 39 ) ],
-"loop": true,
-"name": "Idle",
-"speed": 16.0
-} ]
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array(  )
+}
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 6.11552, 4.92208 )
 
-[node name="Player" type="PathFollow2D"]
+[node name="Path2D" type="Path2D"]
+curve = SubResource( 1 )
+
+[node name="Player" type="PathFollow2D" parent="."]
 rotation = -3.11554
 script = ExtResource( 1 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
 position = Vector2( 1.80036, -0.234996 )
 rotation = 1.55409
-frames = SubResource( 1 )
 animation = "Idle"
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="PlayerArea2D" type="Area2D" parent="AnimatedSprite"]
+[node name="PlayerArea2D" type="Area2D" parent="Player/AnimatedSprite"]
 gravity = 0.0
 linear_damp = 0.0
 collision_layer = 512
 collision_mask = 512
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite/PlayerArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/AnimatedSprite/PlayerArea2D"]
 position = Vector2( 0.172641, 1.81326 )
 rotation = -0.00781367
 shape = SubResource( 2 )
 
-[node name="InteractionTimer" type="Timer" parent="."]
+[node name="InteractionTimer" type="Timer" parent="Player"]
 wait_time = 2.0
 one_shot = true
-[connection signal="area_entered" from="AnimatedSprite/PlayerArea2D" to="." method="_on_Area2D_area_entered"]
-[connection signal="area_exited" from="AnimatedSprite/PlayerArea2D" to="." method="_on_Area2D_area_exited"]
-[connection signal="body_entered" from="AnimatedSprite/PlayerArea2D" to="." method="_on_Area2D_body_entered"]
-[connection signal="body_exited" from="AnimatedSprite/PlayerArea2D" to="." method="_on_Area2D_body_exited"]
-[connection signal="body_shape_entered" from="AnimatedSprite/PlayerArea2D" to="." method="_on_Area2D_body_shape_entered"]
-[connection signal="timeout" from="InteractionTimer" to="." method="_on_InteractionTimer_timeout"]
+[connection signal="area_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_area_entered"]
+[connection signal="area_exited" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_area_exited"]
+[connection signal="body_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_entered"]
+[connection signal="body_exited" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_exited"]
+[connection signal="body_shape_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_shape_entered"]
+[connection signal="timeout" from="Player/InteractionTimer" to="Player" method="_on_InteractionTimer_timeout"]
