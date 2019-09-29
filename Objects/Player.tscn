@@ -1,47 +1,91 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Objects/Player.gd" type="Script" id=1]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking11.png" type="Texture" id=2]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking12.png" type="Texture" id=3]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking13.png" type="Texture" id=4]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking1.png" type="Texture" id=5]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking2.png" type="Texture" id=6]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking3.png" type="Texture" id=7]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking4.png" type="Texture" id=8]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking5.png" type="Texture" id=9]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking6.png" type="Texture" id=10]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking7.png" type="Texture" id=11]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking8.png" type="Texture" id=12]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking9.png" type="Texture" id=13]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking10.png" type="Texture" id=14]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking14.png" type="Texture" id=15]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking15.png" type="Texture" id=16]
+[ext_resource path="res://Assets/townsfolk/Walking/townsfolk_walking16.png" type="Texture" id=17]
 
 [sub_resource type="Curve2D" id=1]
 _data = {
 "points": PoolVector2Array(  )
 }
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "Fidget",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "Walking",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 6.11552, 4.92208 )
 
-[node name="Path2D" type="Path2D"]
+[node name="Player" type="Path2D"]
 curve = SubResource( 1 )
-
-[node name="Player" type="PathFollow2D" parent="."]
-rotation = -3.11554
 script = ExtResource( 1 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="Player"]
+[node name="PlayerFollower" type="PathFollow2D" parent="."]
+rotation = -3.11554
+loop = false
+lookahead = 6.0
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="PlayerFollower"]
 position = Vector2( 1.80036, -0.234996 )
 rotation = 1.55409
-animation = "Idle"
+frames = SubResource( 2 )
+animation = "Fidget"
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="PlayerArea2D" type="Area2D" parent="Player/AnimatedSprite"]
+[node name="PlayerArea2D" type="Area2D" parent="PlayerFollower/AnimatedSprite"]
 gravity = 0.0
 linear_damp = 0.0
 collision_layer = 512
 collision_mask = 512
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/AnimatedSprite/PlayerArea2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerFollower/AnimatedSprite/PlayerArea2D"]
 position = Vector2( 0.172641, 1.81326 )
 rotation = -0.00781367
-shape = SubResource( 2 )
+shape = SubResource( 3 )
 
-[node name="InteractionTimer" type="Timer" parent="Player"]
-wait_time = 2.0
+[node name="Camera2D" type="Camera2D" parent="PlayerFollower"]
+current = true
+zoom = Vector2( 0.4, 0.4 )
+smoothing_enabled = true
+
+[node name="InteractionTimer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
-[connection signal="area_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_area_entered"]
-[connection signal="area_exited" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_area_exited"]
-[connection signal="body_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_entered"]
-[connection signal="body_exited" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_exited"]
-[connection signal="body_shape_entered" from="Player/AnimatedSprite/PlayerArea2D" to="Player" method="_on_Area2D_body_shape_entered"]
-[connection signal="timeout" from="Player/InteractionTimer" to="Player" method="_on_InteractionTimer_timeout"]
+
+[node name="MiningTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+[connection signal="area_entered" from="PlayerFollower/AnimatedSprite/PlayerArea2D" to="." method="_on_PlayerArea2D_area_entered"]
+[connection signal="area_exited" from="PlayerFollower/AnimatedSprite/PlayerArea2D" to="." method="_on_PlayerArea2D_area_exited"]
+[connection signal="timeout" from="InteractionTimer" to="PlayerFollower" method="_on_InteractionTimer_timeout"]
+[connection signal="timeout" from="MiningTimer" to="." method="_on_MiningTimer_timeout"]
