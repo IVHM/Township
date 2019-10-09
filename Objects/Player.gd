@@ -5,7 +5,12 @@ export var type = "player"
 # MOVEMENT VARIABLES
 var moving = true
 export var speed = 40
+onready var facing_direction = $PlayerFollower/AnimatedSprite/FacingNode
+export var rotation_speed = .9
+var turning_angle = null
 onready var follower = $PlayerFollower
+onready var interaction_ray = $PlayerFollower/AnimatedSprite/Line2D2
+onready var interaction_ray_global = $PlayerFollower/AnimatedSprite/Line2D3
 
 #ANIMATION VARIABLES
 var crnt_state = 0
@@ -23,6 +28,7 @@ signal player_clicked
 onready var interaction_timer = $InteractionTimer 
 var near_resource = false
 var resource = null
+
 onready var mining_timer = $MiningTimer
 export var mining_timer_len = .8
 var transition = false
@@ -35,10 +41,11 @@ func _ready():
 		sprite.set_animation("Idle")
 		sprite.play()
 		crnt_state = 0
-
+		#facing_direction.set_global_position(Vector2(-1,0))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+
 
 	if crnt_state == 1:  # Walking
 		if follower.unit_offset > .99:
@@ -46,7 +53,8 @@ func _process(delta):
 			sprite.set_animation(anim[crnt_state])
 		else:
 			follower.set_offset( follower.get_offset() + (speed*delta))
-		
+	
+	
 
 # function to change animation state externally
 func change_state(state):
@@ -64,12 +72,13 @@ func reset_pos():
 func _on_PlayerArea2D_area_entered(body):
 	print("Area2D collision detected ")
 	if !transition:
-		if body.alive:
-			if body.type == "harvestable object":
+		if body.type == "harvestable object":
+			if body.alive:
 				print("near stone", body)
 				self.near_resource = true
+				self.crnt_state = 0
 				resource = body
-				#face_interaction(body.position)
+				follower.look_at(body.position)
 				mine(body)
 	
 	var a = false # Functionality currently disabled
@@ -98,20 +107,15 @@ func _on_PlayerArea2D_area_exited(body):
 		self.resource = null
 
 
-func face_interaction(pos):
-	print("Moving to face resource")
-	var new_curve = Curve2D.new()
-	new_curve.add_point(follower.position)
-	new_curve.add_point(pos)
-	self.set_curve(new_curve)
-	reset_pos()
 
-
+	
+	
 func start_transition():
 	transition = true
 	interaction_timer.start()
 
 	
+##
 # Buffer for collision detection and animation selection so collision don't double bounce
 func _on_InteractionTimer_timeout():
 	transition = false
@@ -130,7 +134,7 @@ func mine(body):
 
 
 func _on_MiningTimer_timeout():
-	print("MiningTimer Done")
+	print("MiningTimer Done\n")
 	if near_resource:
 		mine(resource)
 			
@@ -149,9 +153,11 @@ func _input(event):
 		var new_end_point = get_global_mouse_position() 
 		var new_start_point = follower.position
 		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
-	
-		if near_resource: # This stops the area2d from reacting 
-			start_transition()
+		
+		if !transition:
+			if near_resource: # This stops the area2d from reacting 
+				start_transition()
+				#follower.rotate(-turning_angle)
 	
 		emit_signal("player_clicked", new_start_point, new_end_point, self)
 
