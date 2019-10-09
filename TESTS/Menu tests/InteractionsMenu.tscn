@@ -1,0 +1,111 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://TESTS/Menu tests/InteractionsMenu.gd" type="Script" id=1]
+[ext_resource path="res://Assets/fonts/Perfect DOS VGA 437.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://TESTS/Menu tests/assets/GUI/energy_bar_bg.png" type="Texture" id=3]
+[ext_resource path="res://Assets/fonts/Pixel_font.tres" type="DynamicFont" id=4]
+[ext_resource path="res://Assets/Menu_icons/Interactions/Talk.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Menu_icons/Interactions/trade.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Menu_icons/Interactions/job.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Menu_icons/Interactions/cancel.png" type="Texture" id=8]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 3 )
+region_rect = Rect2( 3.68999, 2.01315, 242.193, 37.9153 )
+
+[sub_resource type="StyleBoxTexture" id=3]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 248, 40 )
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 248, 40 )
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 248, 40 )
+
+[node name="InteractionsMenu" type="Node2D"]
+position = Vector2( -2.0556, 1.06666 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Container" type="PanelContainer" parent="."]
+margin_left = -29.0
+margin_right = 80.0
+margin_bottom = 151.0
+rect_scale = Vector2( 0.880001, 0.92 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Container"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 102.0
+margin_bottom = 144.0
+size_flags_vertical = 11
+
+[node name="Label" type="Label" parent="Container/VBoxContainer"]
+margin_right = 95.0
+margin_bottom = 16.0
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 1 )
+text = "_Dialogue_"
+align = 1
+
+[node name="Talk" type="Button" parent="Container/VBoxContainer"]
+margin_top = 27.0
+margin_right = 95.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+custom_styles/hover = SubResource( 2 )
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Talk"
+icon = ExtResource( 5 )
+
+[node name="Trade" type="Button" parent="Container/VBoxContainer"]
+margin_top = 54.0
+margin_right = 95.0
+margin_bottom = 76.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+custom_styles/hover = SubResource( 3 )
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Trade"
+icon = ExtResource( 6 )
+
+[node name="Job" type="Button" parent="Container/VBoxContainer"]
+margin_top = 81.0
+margin_right = 95.0
+margin_bottom = 103.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+custom_styles/hover = SubResource( 4 )
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Job"
+icon = ExtResource( 7 )
+
+[node name="Cancel" type="Button" parent="Container/VBoxContainer"]
+margin_top = 108.0
+margin_right = 95.0
+margin_bottom = 130.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+custom_styles/hover = SubResource( 5 )
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "Cancel"
+icon = ExtResource( 8 )
+
+[node name="TextureButton" type="TextureButton" parent="Container/VBoxContainer"]
+margin_top = 135.0
+margin_right = 95.0
+margin_bottom = 135.0
+[connection signal="pressed" from="Container/VBoxContainer/Trade" to="." method="_on_Trade_pressed"]
