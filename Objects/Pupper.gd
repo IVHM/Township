@@ -1,7 +1,6 @@
-extends Node2D
+extends Path2D
 
-export (NodePath) var movement_path
-export (NodePath) var path_follower
+export (NodePath) var follower
 
 
 # ANIMATION
@@ -13,8 +12,7 @@ export var animation_tags = [""]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	movement_path = get_node(movement_path)
-	path_follower = get_node(path_follower)
+	follower = get_node(path_follower)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
