@@ -1,0 +1,107 @@
+[gd_scene load_steps=49 format=2]
+
+[ext_resource path="res://Objects/Pupper.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Pupper/Happy_pup9.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Pupper/Happy_pup10.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Pupper/Happy_pup11.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Pupper/Happy_pup12.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Pupper/Happy_pup34.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Pupper/Happy_pup35.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Pupper/Happy_pup36.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Pupper/Happy_pup37.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Pupper/Happy_pup38.png" type="Texture" id=10]
+[ext_resource path="res://Assets/Pupper/Happy_pup39.png" type="Texture" id=11]
+[ext_resource path="res://Assets/Pupper/Happy_pup40.png" type="Texture" id=12]
+[ext_resource path="res://Assets/Pupper/Happy_pup41.png" type="Texture" id=13]
+[ext_resource path="res://Assets/Pupper/Happy_pup1.png" type="Texture" id=14]
+[ext_resource path="res://Assets/Pupper/Happy_pup2.png" type="Texture" id=15]
+[ext_resource path="res://Assets/Pupper/Happy_pup3.png" type="Texture" id=16]
+[ext_resource path="res://Assets/Pupper/Happy_pup4.png" type="Texture" id=17]
+[ext_resource path="res://Assets/Pupper/Happy_pup_stand_idle_wag1.png" type="Texture" id=18]
+[ext_resource path="res://Assets/Pupper/Happy_pup_stand_idle_wag2.png" type="Texture" id=19]
+[ext_resource path="res://Assets/Pupper/Happy_pup_stand_idle_wag3.png" type="Texture" id=20]
+[ext_resource path="res://Assets/Pupper/Happy_pup_stand_idle_wag4.png" type="Texture" id=21]
+[ext_resource path="res://Assets/Pupper/Happy_pup13.png" type="Texture" id=22]
+[ext_resource path="res://Assets/Pupper/Happy_pup14.png" type="Texture" id=23]
+[ext_resource path="res://Assets/Pupper/Happy_pup15.png" type="Texture" id=24]
+[ext_resource path="res://Assets/Pupper/Happy_pup16.png" type="Texture" id=25]
+[ext_resource path="res://Assets/Pupper/Happy_pup17.png" type="Texture" id=26]
+[ext_resource path="res://Assets/Pupper/Happy_pup18.png" type="Texture" id=27]
+[ext_resource path="res://Assets/Pupper/Happy_pup19.png" type="Texture" id=28]
+[ext_resource path="res://Assets/Pupper/Happy_pup20.png" type="Texture" id=29]
+[ext_resource path="res://Assets/Pupper/Happy_pup21.png" type="Texture" id=30]
+[ext_resource path="res://Assets/Pupper/Happy_pup22.png" type="Texture" id=31]
+[ext_resource path="res://Assets/Pupper/Happy_pup23.png" type="Texture" id=32]
+[ext_resource path="res://Assets/Pupper/Happy_pup24.png" type="Texture" id=33]
+[ext_resource path="res://Assets/Pupper/Happy_pup25.png" type="Texture" id=34]
+[ext_resource path="res://Assets/Pupper/Happy_pup26.png" type="Texture" id=35]
+[ext_resource path="res://Assets/Pupper/Happy_pup27.png" type="Texture" id=36]
+[ext_resource path="res://Assets/Pupper/Happy_pup28.png" type="Texture" id=37]
+[ext_resource path="res://Assets/Pupper/Happy_pup29.png" type="Texture" id=38]
+[ext_resource path="res://Assets/Pupper/Happy_pup5.png" type="Texture" id=39]
+[ext_resource path="res://Assets/Pupper/Happy_pup6.png" type="Texture" id=40]
+[ext_resource path="res://Assets/Pupper/Happy_pup7.png" type="Texture" id=41]
+[ext_resource path="res://Assets/Pupper/Happy_pup8.png" type="Texture" id=42]
+[ext_resource path="res://Assets/Pupper/Happy_pup30.png" type="Texture" id=43]
+[ext_resource path="res://Assets/Pupper/Happy_pup31.png" type="Texture" id=44]
+[ext_resource path="res://Assets/Pupper/Happy_pup32.png" type="Texture" id=45]
+[ext_resource path="res://Assets/Pupper/Happy_pup33.png" type="Texture" id=46]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array(  )
+}
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "sit_wag_bark",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 13 ) ],
+"loop": true,
+"name": "walk",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 14 ), ExtResource( 15 ), ExtResource( 16 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "sit_wag",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 18 ), ExtResource( 19 ), ExtResource( 20 ), ExtResource( 21 ) ],
+"loop": true,
+"name": "stand_idle_wag",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 22 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 33 ), ExtResource( 34 ), ExtResource( 35 ), ExtResource( 36 ), ExtResource( 37 ), ExtResource( 38 ) ],
+"loop": true,
+"name": "sit_wag_wiggle",
+"speed": 9.5
+}, {
+"frames": [ ExtResource( 39 ), ExtResource( 40 ), ExtResource( 41 ), ExtResource( 42 ) ],
+"loop": true,
+"name": "sit_wag_blink",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 43 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 46 ) ],
+"loop": true,
+"name": "stand",
+"speed": 4.0
+} ]
+
+[node name="Pupper" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="MovementPath" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="MovementPath"]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="MovementPath/PathFollow2D"]
+position = Vector2( -0.179096, -0.414711 )
+rotation = -1.57056
+frames = SubResource( 2 )
+animation = "sit_wag_wiggle"
+frame = 2
+playing = true
