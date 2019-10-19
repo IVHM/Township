@@ -3,9 +3,12 @@ extends Node2D
 
 export var size = Vector2(16,16)
 export (NodePath) var world_tilemap 
-var tile_ids
+var tile_set
+var tile_ids_amt
+var tile_id_name_lookup = []
 
 var first_run = true
+
 
 
 # used to control the placement and conection of road tiles
@@ -26,9 +29,11 @@ export var road_tile_truth_table = { 0: 0,
 								14:	17,
 								15:	72}
 
+#
+# ASTAR VARIABLES
 var astar = AStar.new()
-var map_array = []
-
+export var tile_weights = {"Grass": 4,
+						   "Road" : 1}
 
 # Random numbers
 var rnd = RandomNumberGenerator.new()
@@ -48,12 +53,17 @@ func _ready():
 
 
 func load_tile_ids():
-	self.tile_ids = self.world_tilemap.get_tileset().get_tiles_ids()
+	self.tile_set = world_tilemap.get_tileset()
+	self.tile_ids_amt = len(tile_set.get_tiles_ids())
 	print("###################")
 	print("###TILE IDS####")
-	print(self.tile_ids)
+	print(self.tile_ids_amt)
 	print("###################")
+	for i in range(tile_ids_amt):
+		self.tile_id_name_lookup.append(tile_set.tile_get_name(i))
+		print(i,":", self.tile_id_name_lookup[i])
 
+	print("###################")
 #
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -70,7 +80,15 @@ func _process(delta):
 func _on_Timer_timeout():
 	generated = false
 
+
 func generate_random_map():
 	for i in range(size.x):
 		for j in range(size.y):
-			world_tilemap.set_cell(i, j, tile_ids[rnd.randi_range(0, len(tile_ids) - 1)])
+			world_tilemap.set_cell(i, j, rnd.randi_range(0, len(tile_id_name_lookup) - 1))
+			var tile_type = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')[0]
+			print(tile_type)
+			var astar_id = i*size.y + j
+			var tile_coords = world_tilemap.map_to_world(Vector2(i,j))
+			tile_coords = Vector3(tile_coords.x, tile_coords.y, 0)
+			astar.add_point(astar_id, tile_coords, tile_weights[tile_type] )
+		
