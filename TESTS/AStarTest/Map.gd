@@ -9,10 +9,12 @@ export (String) var default_grass_name = "Grass"
 export (int) var num_grass_tiles = 7
 var default_road_id
 var tile_set
+export var tile_size = 16
 var tile_ids_amt
 var tile_id_name_lookup = []
 
 var first_run = true
+var second_run = false
 
 # Used to control the placement and conection of road tiles
 export var road_tile_truth_table = { 0: 0,
@@ -32,7 +34,7 @@ export var road_tile_truth_table = { 0: 0,
 								14:	17,
 								15:	72}
 
-#
+##
 # ASTAR VARIABLES
 var astar = AStar.new()  # Calculates/stores the path between different weighted points
 # Used to quickly reference different info about an astar node and its properties
@@ -41,7 +43,7 @@ export var tile_weights = {"Grass" : 4,  # Tells the a star alg what weight to s
 						   "Road"  : 1,
 						   "Tile"  : 8}
 
-#
+##
 # Random numbers
 var rnd = RandomNumberGenerator.new()
 
@@ -49,16 +51,17 @@ var rnd = RandomNumberGenerator.new()
 export var generating = false
 var generated = false
 onready var testing_timer = $Timer
+onready var astar_visualizer = $AstarVisualization
+var astar_lines = {}
 
-
-#
+##
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	self.world_tilemap = get_node(world_tilemap)
 	print(self.size)
 	
 
-#
+##
 # Gets a list of the different ideas for each tile in the tileset
 func load_tile_ids():
 	self.tile_set = world_tilemap.get_tileset()
@@ -69,10 +72,14 @@ func load_tile_ids():
 	for i in range(tile_ids_amt):
 		self.tile_id_name_lookup.append(tile_set.tile_get_name(i))
 
-#
+##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# Intializes the tiles in the tile map
+	if second_run:
+		draw_astar_connections()
+		second_run = false 
+
 	if first_run:
 		load_tile_ids()
 		if map_generation_mode == 0:
@@ -81,7 +88,11 @@ func _process(delta):
 			generate_random_map()
 		if map_generation_mode == 2:
 			pass
+		
+			
+		
 		first_run = false
+		second_run = true
 		
 	# used to stress test map generation
 	if generating:
@@ -95,7 +106,7 @@ func _process(delta):
 		print("mouse_right_pressed")
 		var crnt_mouse_pos = get_global_mouse_position()
 		change_tile_to_road(crnt_mouse_pos)
-#
+##
 # Used to generate a random base map
 func generate_random_map():
 	for i in range(size.x):
@@ -107,7 +118,7 @@ func generate_random_map():
 	initialize_connections()
 
 
-#
+##
 # Generate a blank map of grass tiles
 func generate_blank_map():
 	for i in range(size.x):
@@ -119,22 +130,24 @@ func generate_blank_map():
 
 			update_astar(i,j)
 	initialize_connections()
-#
+##
 # Creates the lookup table for astar points 
 func update_astar(i,j):
 	# Here we intialize the info for the astar id to cell lookup
 	var tile_name = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')
 	var tile_type = tile_name[0]  # now we get it's type for weight calculations
-	var astar_id = i*size.y + j  # Assign the point an id based on its pos
-	var tile_coords = world_tilemap.map_to_world(Vector2(i,j)) 
+	var astar_id = tile_map_pos_to_astar_id(i, j)  # Assign the point an id based on its pos
+	var tile_coords = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
 	tile_coords = Vector3(tile_coords.x, tile_coords.y, 0)
 
 	# add all information to the lookup dictionary
 	self.astar_id_lookup[astar_id] = [Vector2(i,j), tile_type, tile_name, tile_coords]
-
+	#print("Update ", astar_id, self.astar_id_lookup[astar_id])
 	# Add new astar entry to lookup dictionary
 	astar.add_point(astar_id, tile_coords, tile_weights[tile_type] )
-#
+
+	
+##
 # Creates the oaths between all the astar points
 func initialize_connections():
 	# Conects a cell with its valid neighbors.
@@ -142,21 +155,26 @@ func initialize_connections():
 		# THIS WILL NOT WORK RIGHT MUST FIND FIX
 		var crnt_pos = self.astar_id_lookup[crnt_id][0]
 
-		var neighbors = [crnt_pos - Vector2(0,size.y),  # Top
+		var neighbors = [crnt_pos - Vector2(0,1),  # Top
 					 	 crnt_pos + Vector2(1, 0),       # Right
-					 	 crnt_pos + Vector2(0, size.y),  # Bottom
+					 	 crnt_pos + Vector2(0, 1),  # Bottom
 					  	 crnt_pos - Vector2(1,0)        # Left
 					]
 		
 		for crnt_neighbor in neighbors:
-			if crnt_neighbor.x < 0 || crnt_neighbor.y < 0 || crnt_neighbor.x >= size.x || crnt_neighbor.y >= size.y:
+			if self.astar_id_lookup[tile_map_pos_to_astar_id(crnt_pos.x, crnt_pos.y)][1] == "Tile":
 				pass
-
+			elif crnt_neighbor.x < 0 || crnt_neighbor.y < 0 || crnt_neighbor.x >= size.x || crnt_neighbor.y >= size.y:
+				pass
+			elif self.astar_id_lookup[tile_map_pos_to_astar_id(crnt_neighbor.x, crnt_neighbor.y)][1] == "Tile":
+				pass
 			else:
-				pass #astar.connect_points(crnt_id, crnt_neighbor)
+				astar.connect_points(crnt_id,
+									 tile_map_pos_to_astar_id(crnt_neighbor.x,
+									 				          crnt_neighbor.y))
 
 
-#
+##
 # Used to toubleshoot/visualize pathfinding bugs
 func draw_astar_connections():
 	var connections_drawn = []
@@ -164,19 +182,40 @@ func draw_astar_connections():
 		for crnt_point in self.astar_id_lookup.keys():
 			var crnt_connections = astar.get_point_connections(crnt_point)
 			var crnt_pos = self.astar_id_lookup[crnt_point][3]
-			for neighbor in crnt_connections:
-				pass #someway to draw lines between neighbors, idk figure it out
 
-			
+			for crnt_neighbor in crnt_connections:
+				var crnt_pair  = [crnt_point, crnt_neighbor]
+				crnt_pair.sort()
+				if !connections_drawn.has(crnt_pair):
+					print("CN:", crnt_neighbor, "CP:", crnt_point, "CC", crnt_connections)
+					print(crnt_neighbor, self.astar_id_lookup[crnt_neighbor])
+					var crnt_neighbor_pos = self.astar_id_lookup[crnt_neighbor][3]
+					connections_drawn.append(crnt_pair)
+					self.astar_lines[crnt_pair] = Line2D.new()
+					self.astar_lines[crnt_pair].add_point(Vector2(crnt_pos.x, crnt_pos.y))
+					self.astar_lines[crnt_pair].add_point(Vector2(crnt_neighbor_pos.x,
+																  crnt_neighbor_pos.y))
+					self.astar_lines[crnt_pair].set_default_color(Color( 0.94, 0.97, 1, 1 ))
+					self.astar_lines[crnt_pair].set_width(1)
+					astar_visualizer.add_child(self.astar_lines[crnt_pair])
 
 
+##
+# Translates the map tile's pos to it's correspoding astar point's id
+func tile_map_pos_to_astar_id(i,j):
+	return int((i * self.size.y) + j) 	
+
+#
 #### TEST FUNCTIONS
 
-
+##
 #used with map genertatio
 func _on_Timer_timeout():
 	generated = false
 
 func change_tile_to_road(mouse_pos):
-		var tilemap_pos = world_tilemap.world_to_map(mouse_pos)
-		world_tilemap.set_cell(tilemap_pos.x, tilemap_pos.y, self.default_road_id)
+		if mouse_pos.x >= 0 && mouse_pos.y >= 0:
+			if mouse_pos.x <= size.x*self.tile_size && mouse_pos.y <= size.y*self.tile_size:
+				var tilemap_pos = world_tilemap.world_to_map(mouse_pos)
+				world_tilemap.set_cell(tilemap_pos.x, tilemap_pos.y, self.default_road_id)
+
