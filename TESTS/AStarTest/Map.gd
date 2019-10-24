@@ -7,6 +7,7 @@ export (int, "Blank",  "Random") var map_generation_mode = 0
 export (String) var default_road_name = "Road_Island_01"
 export (String) var default_grass_name = "Grass"
 export (int) var num_grass_tiles = 7
+
 var default_road_id
 var tile_set
 export var tile_size = 16
@@ -17,23 +18,11 @@ var first_run = true
 var second_run = false
 
 # Used to control the placement and conection of road tiles
-export var road_tile_truth_table = { 0: 0,
-								1:	264,
-								2:	260,
-								3:	34,
-								4:	264,
-								5:	136,
-								6:	36,
-								7:	24,
-								8:	260,
-								9:	33,
-								10:	132,
-								11:	20,
-								12:	40,
-								13:	18,
-								14:	17,
-								15:	72}
-
+export var road_tile_truth_table = [4, 64, 33, 131, 66, 16, 1, 513,        # Mapped to a binary value based on nieghbor's cardinal placement 
+								    32, 128, 8, 256, 128, 513, 258, 1024]  # see included spreead sheet(townsfolk_roads_truth_table.ods) 
+export var road_tile_cypher = [i1, s2, s1, d2, d1, c, t2, t1, j1]  # Use index 
+export var road_variant_amts = {"i1": 2, "s2": 3, "s1":3, "d2":2, "d1":2, 
+								"c":2, "t2":2, "t1":2, "j1":2}
 ##
 # ASTAR VARIABLES
 var astar = AStar.new()  # Calculates/stores the path between different weighted points
@@ -52,6 +41,7 @@ export var generating = false
 var generated = false
 onready var testing_timer = $Timer
 onready var astar_visualizer = $AstarVisualization
+export var line_colors = [Color(0,0,1,1), Color(1,0,0,1)]
 var astar_lines = {}
 
 ##
@@ -75,11 +65,12 @@ func load_tile_ids():
 ##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	# Intializes the tiles in the tile map
+	# This runs on the second pass after a star has been initialized
 	if second_run:
 		draw_astar_connections()
 		second_run = false 
-
+	
+	# Intializes the tiles in the tile map
 	if first_run:
 		load_tile_ids()
 		if map_generation_mode == 0:
@@ -88,8 +79,6 @@ func _process(delta):
 			generate_random_map()
 		if map_generation_mode == 2:
 			pass
-		
-			
 		
 		first_run = false
 		second_run = true
@@ -155,11 +144,7 @@ func initialize_connections():
 		# THIS WILL NOT WORK RIGHT MUST FIND FIX
 		var crnt_pos = self.astar_id_lookup[crnt_id][0]
 
-		var neighbors = [crnt_pos - Vector2(0,1),  # Top
-					 	 crnt_pos + Vector2(1, 0),       # Right
-					 	 crnt_pos + Vector2(0, 1),  # Bottom
-					  	 crnt_pos - Vector2(1,0)        # Left
-					]
+		var neighbors = get_cell_neighbors(crnt_pos)
 		
 		for crnt_neighbor in neighbors:
 			if self.astar_id_lookup[tile_map_pos_to_astar_id(crnt_pos.x, crnt_pos.y)][1] == "Tile":
@@ -173,7 +158,19 @@ func initialize_connections():
 									 tile_map_pos_to_astar_id(crnt_neighbor.x,
 									 				          crnt_neighbor.y))
 
+##
+# Output an array of neighbors for a given map position
+func get_cell_neighbors(pos, output_ID=false):
+	var output = [pos - Vector2(0, 1),    # Top
+				  pos + Vector2(1, 0),    # Right
+				  pos + Vector2(0, 1),    # Bottom
+				  pos - Vector2(1, 0)]    # Left
+			     
+	if output_ID:
+		for i in range(len(output)):
+			output[i] = tile_map_pos_to_astar_id(output[i].x, output[i].y)
 
+	return output
 ##
 # Used to toubleshoot/visualize pathfinding bugs
 func draw_astar_connections():
@@ -195,7 +192,10 @@ func draw_astar_connections():
 					self.astar_lines[crnt_pair].add_point(Vector2(crnt_pos.x, crnt_pos.y))
 					self.astar_lines[crnt_pair].add_point(Vector2(crnt_neighbor_pos.x,
 																  crnt_neighbor_pos.y))
-					self.astar_lines[crnt_pair].set_default_color(Color( 0.94, 0.97, 1, 1 ))
+					if self.astar_id_lookup[crnt_point][1] == "Road" :
+						self.astar_lines[crnt_pair].set_default_color(line_colors[1])
+					else:
+						self.astar_lines[crnt_pair].set_default_color(line_colors[0])
 					self.astar_lines[crnt_pair].set_width(1)
 					astar_visualizer.add_child(self.astar_lines[crnt_pair])
 
@@ -204,18 +204,62 @@ func draw_astar_connections():
 # Translates the map tile's pos to it's correspoding astar point's id
 func tile_map_pos_to_astar_id(i,j):
 	return int((i * self.size.y) + j) 	
+##
+# Utility function for adding road tles
+func change_tile_to_road(world_pos):
+	if world_pos.x >= 0 && world_pos.y >= 0:
+		if world_pos.x <= size.x*self.tile_size && world_pos.y <= size.y*self.tile_size:
+			# Calculate what kind of road tile to
+			var tilemap_pos = world_tilemap.world_to_map(world_pos)
+			calculate_road_type(tilemap_pos)
+			# Now check if we need to update any neighboring road tiles
+			var neighbors = get_cell_neighbors(tilemap_pos)
+			for i in neighbors:
+				calculate_road_type(i)
+
+##
+# Controls how roads are drawn depending on the neighbors around them.
+func calculate_road_type(map_pos):
+	var road_type = null
+	var flip_x = false 
+	var flip_y = false
+	var crnt_point = tile_map_pos_to_astar_id(map_pos.x, map_pos.y)
+	var neighbors = get_cell_neighbors(crnt_point, true)
+	var tot = 0
+
+	# Checks to see which neighbors are present and outputs a number based on that  
+	for i in range(len(neighbors)):
+		if astar_id_lookup[1] == "Road":
+			tot += 2**i
+	tot = self.road_tile_truth_table[tot]  # Get a precalculated number that lets the 
+	
+	# Decyphers the bool output into it's tile_type
+	var crnt_mask
+	for i in range(2,len(self.road_tile_cypher)):
+		crnt_mask = tot & (2**i)
+		if crnt_mask != 0:
+			road_type = road_tile_cypher[i-2]
+			break
+	
+	# Decyhpher whether tile is flipped 
+	if tot & 2 != 0:
+		flip_x = true
+	if tot & 1 != 0:
+		flip_y = true 
+
+	# Changes the tile and updates the lookup table
+	if road_type != null:
+		var new_tile = "Road_"+road_type+"_" # Set to the correct tile type
+		new_tile += rnd.randi_range(1, self.road_variant_amt[road_type]) # And choose one of it's variations
+		world_tilemap.set_cell(map_pos.x, map_pos.y, t_flip_x, t_flip_y)
+		update_astar(map_pos.x, map_pos.y)
 
 #
 #### TEST FUNCTIONS
 
 ##
-#used with map genertatio
+#used with map genertation stress testing
 func _on_Timer_timeout():
 	generated = false
 
-func change_tile_to_road(mouse_pos):
-		if mouse_pos.x >= 0 && mouse_pos.y >= 0:
-			if mouse_pos.x <= size.x*self.tile_size && mouse_pos.y <= size.y*self.tile_size:
-				var tilemap_pos = world_tilemap.world_to_map(mouse_pos)
-				world_tilemap.set_cell(tilemap_pos.x, tilemap_pos.y, self.default_road_id)
 
