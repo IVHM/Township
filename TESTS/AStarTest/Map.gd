@@ -4,7 +4,7 @@ extends Node2D
 export var size = Vector2(16,16)
 export (NodePath) var world_tilemap 
 export (int, "Blank",  "Random") var map_generation_mode = 0
-export (String) var default_road_name = "Road_i1_1"
+var default_road = {"name": "Road_i1_1", "tileset_id": null}
 export (String) var default_grass_name = "Grass"
 export (int) var num_grass_tiles = 7
 
@@ -20,8 +20,9 @@ var second_run = false
 # Used to control the placement and conection of road tiles
 export var road_tile_truth_table = [4, 64, 33, 131, 66, 16, 1, 513,        # Mapped to a binary value based on nieghbor's cardinal placement 
 								    32, 128, 8, 256, 128, 513, 258, 1024]  # see included spreead sheet(townsfolk_roads_truth_table.ods) 
-export (Array) var road_tile_cypher = ["i1", "s2", "s1", "d2", "d1", "c", "t2", "t1", "j1"]  # Use index 
-export (Dictionary) var road_variant_amts = {"i1": 2, "s2": 3, "s1":3, "d2":2, "d1":2, "c":2, "t2":2, "t1":2, "j1":2}
+export (Array) var road_tile_cypher = ["i1", "s1", "s2", "d1", "d2", "c1", "t1", "t2", "j1"]  # Use index 
+export (Dictionary) var road_variant_amts = {"i1": 2, "s2": 3, "s1":3, "d2":2, "d1":2, "c1":2, "t2":2, "t1":2, "j1":2}
+
 ##
 # ASTAR VARIABLES
 var astar = AStar.new()  # Calculates/stores the path between different weighted points
@@ -35,6 +36,7 @@ export var tile_weights = {"Grass" : 4,  # Tells the a star alg what weight to s
 # Random numbers
 var rnd = RandomNumberGenerator.new()
 
+##
 # TESTING GENERATION VARIABLES
 export var generating = false
 var generated = false
@@ -56,17 +58,19 @@ func load_tile_ids():
 	self.tile_set = world_tilemap.get_tileset()
 	
 	self.tile_ids_amt = len(tile_set.get_tiles_ids())
-	self.default_road_id = tile_set.find_tile_by_name(self.default_road_name)
+	self.default_road["tileset_id"] = tile_set.find_tile_by_name(self.default_road["name"])
 	
 	for i in range(tile_ids_amt):
 		self.tile_id_name_lookup.append(tile_set.tile_get_name(i))
+	print(tile_id_name_lookup)
+
 
 ##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	# This runs on the second pass after a star has been initialized
 	if second_run:
-		draw_astar_connections()
+		#draw_astar_connections()
 		second_run = false 
 	
 	# Intializes the tiles in the tile map
@@ -94,7 +98,10 @@ func _process(delta):
 		print("mouse_right_pressed")
 		var crnt_mouse_pos = get_global_mouse_position()
 		print("######crnt_mouse_pos", crnt_mouse_pos)
+		print("######crnt_map_pos : ", world_tilemap.world_to_map(crnt_mouse_pos))
 		change_tile_to_road(crnt_mouse_pos)
+
+
 ##
 # Used to generate a random base map
 func generate_random_map():
@@ -119,6 +126,8 @@ func generate_blank_map():
 
 			update_astar(i,j)
 	initialize_connections()
+
+
 ##
 # Creates the lookup table for astar points 
 func update_astar(i,j):
@@ -126,14 +135,14 @@ func update_astar(i,j):
 	var tile_name = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')
 	var tile_type = tile_name[0]  # now we get it's type for weight calculations
 	var astar_id = tile_map_pos_to_astar_id(i, j)  # Assign the point an id based on its pos
-	var tile_coords = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
-	tile_coords = Vector3(tile_coords.x, tile_coords.y, 0)
+	var world_coords = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
+	world_coords = Vector3(world_coords.x, world_coords.y, 0)
 
 	# add all information to the lookup dictionary
-	self.astar_id_lookup[astar_id] = [Vector2(i,j), tile_type, tile_name, tile_coords]
+	self.astar_id_lookup[astar_id] = [Vector2(i,j), tile_type, tile_name, world_coords]
 	#print("Update ", astar_id, self.astar_id_lookup[astar_id])
 	# Add new astar entry to lookup dictionary
-	astar.add_point(astar_id, tile_coords, tile_weights[tile_type] )
+	astar.add_point(astar_id, world_coords, tile_weights[tile_type] )
 
 	
 ##
@@ -159,6 +168,7 @@ func initialize_connections():
 					astar.connect_points(crnt_id, tile_map_pos_to_astar_id(crnt_neighbor.x,
 																		   crnt_neighbor.y))
 
+
 ##
 # Output an array of neighbors for a given map position
 func get_cell_neighbors(pos, output_ID=false):
@@ -177,6 +187,8 @@ func get_cell_neighbors(pos, output_ID=false):
 				output[i] = tile_map_pos_to_astar_id(output[i].x, output[i].y)
 
 	return output
+
+
 ##
 # Used to toubleshoot/visualize pathfinding bugs
 func draw_astar_connections():
@@ -190,8 +202,8 @@ func draw_astar_connections():
 				var crnt_pair  = [crnt_point, crnt_neighbor]
 				crnt_pair.sort()
 				if !connections_drawn.has(crnt_pair):
-					print("CN:", crnt_neighbor, "CP:", crnt_point, "CC", crnt_connections)
-					print(crnt_neighbor, self.astar_id_lookup[crnt_neighbor])
+					#print("CN:", crnt_neighbor, "CP:", crnt_point, "CC", crnt_connections)
+					#print(crnt_neighbor, self.astar_id_lookup[crnt_neighbor])
 					var crnt_neighbor_pos = self.astar_id_lookup[crnt_neighbor][3]
 					connections_drawn.append(crnt_pair)
 					self.astar_lines[crnt_pair] = Line2D.new()
@@ -209,7 +221,9 @@ func draw_astar_connections():
 ##
 # Translates the map tile's pos to it's correspoding astar point's id
 func tile_map_pos_to_astar_id(i,j):
-	return int((i * self.size.y) + j) 	
+	return int((i * self.size.y) + j) 
+	
+	
 ##
 # Utility function for adding road tles
 func change_tile_to_road(world_pos):
@@ -217,54 +231,69 @@ func change_tile_to_road(world_pos):
 		if world_pos.x <= size.x*self.tile_size && world_pos.y <= size.y*self.tile_size:
 			# Calculate what kind of road tile to
 			var tilemap_pos = world_tilemap.world_to_map(world_pos)
+			world_tilemap.set_cell(tilemap_pos.x, tilemap_pos.y, self.default_road["tileset_id"])
+			update_astar(tilemap_pos.x, tilemap_pos.y)
 			calculate_road_type(tilemap_pos)
+			
 			# Now check if we need to update any neighboring road tiles
 			var neighbors = get_cell_neighbors(tilemap_pos)
-			for i in neighbors:
-				if i != null:
-					calculate_road_type(i)
+			#for i in neighbors:
+				#if i != null:
+					#calculate_road_type(i)
+
 
 ##
+
 # Controls how roads are drawn depending on the neighbors around them.
+# Takes in a Vector2, and updates the tilemap cell and astar point in the lookup
 func calculate_road_type(map_pos):
 	var road_type = null
-	var flip_x = false 
-	var flip_y = false
+	var t_flip_x = false 
+	var t_flip_y = false
 	var crnt_point = tile_map_pos_to_astar_id(map_pos.x, map_pos.y)
 	var neighbors = get_cell_neighbors(map_pos, true)
 	var tot = 0
 
-	# Checks to see which neighbors are present and outputs a number based on that  
-	for i in range(len(neighbors)):
-		if neighbors[i] != null:
-			if astar_id_lookup[neighbors[i]][1] == "Road":
-				tot += pow(2, i)
-	tot = self.road_tile_truth_table[tot]  # Get a precalculated number that lets the 
-	
-	# Decyphers the bool output into it's tile_type
-	var crnt_mask
-	for i in range(2,len(self.road_tile_cypher)):
-		crnt_mask = tot & int(pow(2, i))
-		print(i," | ", pow(2, i),  " & ", tot, " = ", crnt_mask )
-		if crnt_mask != 0:
-			road_type = road_tile_cypher[i - 2]
-			break
-	
-	# Decyhpher whether tile is flipped 
-	if tot & 2 != 0:
-		flip_x = true
-	if tot & 1 != 0:
-		flip_y = true 
-	print(road_type)
-	# Changes the tile and updates the lookup table
-	if road_type != null:
-		var new_tile = "Road_"+road_type+"_" # Set to the correct tile type
-		new_tile += str(rnd.randi_range(1, self.road_variant_amts[road_type])) # And choose one of it's variations
-		print(new_tile, ": ")
-		new_tile = tile_id_name_lookup.find(new_tile)
-		print(new_tile," | ", tile_id_name_lookup)
-		world_tilemap.set_cell(map_pos.x, map_pos.y, new_tile, flip_x, flip_y)
-		update_astar(map_pos.x, map_pos.y)
+	# Make sure this tile is already a road tile
+	if astar_id_lookup[tile_map_pos_to_astar_id(map_pos.x, map_pos.y)][1] == "Road":
+		# Checks to see which neighbors are present and outputs a number based on that  
+		for i in range(len(neighbors)-1, -1,-1):
+			if neighbors[i] != null:
+				if astar_id_lookup[neighbors[i]][1] == "Road":
+					tot += pow(2, i)
+		tot = self.road_tile_truth_table[tot]  # Get a precalculated number that lets the 
+		
+		# Decyphers the bool output into it's tile_type
+		var crnt_mask
+		
+		for i in range(2,len(self.road_tile_cypher)):
+			crnt_mask = tot & int(pow(2, i))
+			#print(i," | ", pow(2, i),  " & ", tot, " = ", crnt_mask )
+			if crnt_mask != 0:
+				road_type = road_tile_cypher[i - 2]
+				break
+		
+		## Decyhpher whether tile is flipped 
+		if tot & 2 != 0:
+			t_flip_x = true
+		if tot & 1 != 0:
+			t_flip_y = true 
+		print(road_type)
+		## Changes the tile and updates the lookup table
+		if road_type != null:
+			var new_tile = "Road_"+road_type+"_" # Set to the correct tile type
+			new_tile += str(rnd.randi_range(1, self.road_variant_amts[road_type])) # And choose one of it's variations
+			print(new_tile, ": ")
+			var new_tile_id = tile_id_name_lookup.find(new_tile)
+			#if new_tile_id == -1:
+			print("new_tile    | ", new_tile)
+			print("new_tile_id | ", new_tile_id)
+			print("map_pos     | ", map_pos)
+			print("Flip (x,y)  | ", t_flip_x, t_flip_y)
+
+			world_tilemap.set_cell(map_pos.x, map_pos.y, new_tile_id, t_flip_x, t_flip_y)
+			update_astar(map_pos.x, map_pos.y)
+
 
 #
 #### TEST FUNCTIONS
