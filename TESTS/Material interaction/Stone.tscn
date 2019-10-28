@@ -4,7 +4,7 @@
 [ext_resource path="res://Assets/Nat_Materials/Stone/001/stone_breaking1.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 13.9902
+radius = 11.3648
 
 [node name="Stone" type="Area2D"]
 collision_layer = 512
