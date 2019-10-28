@@ -1,23 +1,64 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://TESTS/Material interaction/StoneTest.gd" type="Script" id=1]
-[ext_resource path="res://Objects/TileMaps/OutdoorMap.tres" type="TileSet" id=2]
+[ext_resource path="res://TESTS/AStarTest/Map.tscn" type="PackedScene" id=2]
 [ext_resource path="res://TESTS/Material interaction/Stone.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://TESTS/Menu tests/GUI.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Objects/Pupper.tscn" type="PackedScene" id=6]
 
 [node name="StoneTest" type="Node2D"]
+position = Vector2( 100, 80 )
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+nav_tiles = NodePath("Map")
+pc = NodePath("Player")
+companion = NodePath("Pupper")
 
-[node name="TileNavigation" type="Navigation2D" parent="."]
-
-[node name="TileMap" type="TileMap" parent="TileNavigation"]
-tile_set = ExtResource( 2 )
-cell_size = Vector2( 16, 16 )
-format = 1
-tile_data = PoolIntArray( -262138, 16, 0, -262137, 16, 0, -262136, 16, 0, -262135, 16, 0, -262134, 16, 0, -131076, 0, 0, -131075, 0, 0, -131074, 0, 0, -131073, 0, 0, -196608, 0, 0, -196607, 0, 0, -196606, 0, 0, -196605, 0, 0, -196604, 0, 0, -196603, 0, 0, -196602, 16, 0, -196601, 0, 0, -196600, 0, 0, -196599, 0, 0, -196598, 16, 0, -65540, 0, 0, -65539, 0, 0, -65538, 0, 0, -65537, 0, 0, -131072, 0, 0, -131071, 0, 0, -131070, 0, 0, -131069, 0, 0, -131068, 0, 0, -131067, 0, 0, -131066, 16, 0, -131065, 0, 0, -131064, 16, 0, -131063, 0, 0, -131062, 16, 0, -4, 0, 0, -3, 0, 0, -2, 0, 0, -1, 0, 0, -65536, 0, 0, -65535, 0, 0, -65534, 0, 0, -65533, 0, 0, -65532, 0, 0, -65531, 0, 0, -65530, 16, 0, -65529, 0, 0, -65528, 16, 0, -65527, 0, 0, -65526, 16, 0, 65532, 0, 0, 65533, 0, 0, 65534, 0, 0, 65535, 0, 0, 0, 16, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 16, 0, 7, 0, 0, 8, 16, 0, 9, 0, 0, 10, 16, 0, 131068, 0, 0, 131069, 0, 0, 131070, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0, 65540, 0, 0, 65541, 0, 0, 65542, 0, 0, 65543, 0, 0, 65544, 16, 0, 65545, 0, 0, 65546, 16, 0, 65547, 16, 0, 65548, 16, 0, 196604, 0, 0, 196605, 0, 0, 196606, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0, 131077, 0, 0, 131078, 16, 0, 131079, 0, 0, 131080, 16, 0, 131081, 0, 0, 131082, 16, 0, 131083, 16, 0, 131084, 0, 0, 131085, 0, 0, 131086, 0, 0, 131087, 0, 0, 262140, 0, 0, 262141, 0, 0, 262142, 0, 0, 262143, 0, 0, 196608, 0, 0, 196609, 0, 0, 196610, 0, 0, 196611, 0, 0, 196612, 0, 0, 196613, 0, 0, 196614, 16, 0, 196615, 16, 0, 196616, 16, 0, 196617, 0, 0, 196618, 0, 0, 196619, 0, 0, 196620, 0, 0, 196621, 0, 0, 196622, 0, 0, 196623, 0, 0, 262153, 16, 0, 262154, 16, 0, 262155, 16, 0, 262156, 0, 0, 262157, 0, 0, 262158, 0, 0, 262159, 0, 0, 327691, 16, 0, 327692, 16, 0 )
+[node name="Map" parent="." instance=ExtResource( 2 )]
+position = Vector2( -96.7943, -81.6959 )
 
 [node name="Stone" parent="." instance=ExtResource( 3 )]
 position = Vector2( 7.10766, 7.87126 )
 
+[node name="Stone2" parent="." instance=ExtResource( 3 )]
+position = Vector2( -42.0695, 40.2246 )
+rotation = 0.817482
+max_inventory = {
+"stone": 400
+}
+inventory = {
+"stone": 400
+}
+
+[node name="Stone3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 71.4909, -8.95249 )
+rotation = -2.64452
+max_inventory = {
+"stone": 400
+}
+inventory = {
+"stone": 400
+}
+
 [node name="Player" parent="." instance=ExtResource( 4 )]
-position = Vector2( 5.70001, -2.85001 )
+editor/display_folded = true
+position = Vector2( 5.7, -20 )
+mining_timer_len = 1.0
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2( 0.4, 0.4 )
+
+[node name="GUI" parent="Player/Camera2D" instance=ExtResource( 5 )]
+margin_left = -101.0
+margin_top = -58.0
+margin_right = 935.0
+margin_bottom = 35.0
+rect_scale = Vector2( 0.195072, 0.267423 )
+
+[node name="Pupper" parent="." instance=ExtResource( 6 )]
+position = Vector2( 50.6627, 28.1857 )
+leader = NodePath("../Player")
+[connection signal="pupper_path_request" from="Pupper" to="." method="_on_Pupper_pupper_path_request"]
