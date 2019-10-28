@@ -308,8 +308,21 @@ func calculate_road_type(map_pos):
 			world_tilemap.set_cell(map_pos.x, map_pos.y, new_tile_id, t_flip_x, t_flip_y)
 			update_astar(map_pos.x, map_pos.y)
 
+##
+# Gets path between two points in the form of 
+func get_astar_path(start_pos, end_pos):
+	var world_start_pos = start_pos
+	start_pos = tile_map_pos_to_astar_id(world_tilemap.world_to_map(start_pos))
+	end_pos = tile_map_pos_to_astar_id(world_tilemap.world_to_map(end_pos))
+	var id_path = astar.get_id_path(start_pos, end_pos)
+	print(id_path)
+	id_path[0] = world_start_pos
+	for i in range(1,len(id_path)):
+		id_path[i] = astar_id_lookup[id_path[i]][3]
+	
+	return id_path
 
-#
+			#
 #### TEST FUNCTIONS
 
 ##
