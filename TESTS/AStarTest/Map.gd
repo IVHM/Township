@@ -97,8 +97,9 @@ func _process(delta):
 	if Input.is_action_pressed("ui_mouse_right"):
 		print("mouse_right_pressed")
 		var crnt_mouse_pos = get_global_mouse_position()
-		print("######crnt_mouse_pos", crnt_mouse_pos)
-		print("######crnt_map_pos : ", world_tilemap.world_to_map(crnt_mouse_pos))
+		print("######crnt_mouse_pos : ", crnt_mouse_pos)
+		print("######crnt_map_pos   : ", world_tilemap.world_to_map(crnt_mouse_pos))
+		print("######crnt_astar_id  : ", tile_map_pos_to_astar_id(world_tilemap.world_to_map(crnt_mouse_pos))))
 		change_tile_to_road(crnt_mouse_pos)
 
 
@@ -219,9 +220,12 @@ func draw_astar_connections():
 
 
 ##
-# Translates the map tile's pos to it's correspoding astar point's id
-func tile_map_pos_to_astar_id(i,j):
-	return int((i * self.size.y) + j) 
+# Translates the map tile's pos to it's correspoding astar point's id take sin a vector2 or two numbers
+func tile_map_pos_to_astar_id(i,j=null):
+	if j == null:
+		return int((i.x * size.y) + i.y)
+	else:
+		return int((i * self.size.y) + j) 
 	
 	
 ##
@@ -265,7 +269,6 @@ func calculate_road_type(map_pos):
 		
 		# Decyphers the bool output into it's tile_type
 		var crnt_mask
-		
 		for i in range(2,len(self.road_tile_cypher)):
 			crnt_mask = tot & int(pow(2, i))
 			#print(i," | ", pow(2, i),  " & ", tot, " = ", crnt_mask )
@@ -290,6 +293,7 @@ func calculate_road_type(map_pos):
 			print("new_tile_id | ", new_tile_id)
 			print("map_pos     | ", map_pos)
 			print("Flip (x,y)  | ", t_flip_x, t_flip_y)
+			print(neighbors)
 
 			world_tilemap.set_cell(map_pos.x, map_pos.y, new_tile_id, t_flip_x, t_flip_y)
 			update_astar(map_pos.x, map_pos.y)
