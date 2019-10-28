@@ -34,6 +34,8 @@ func _ready():
 	for i in inventory.values():
 		self.total += i
 	sprite.set_texture(load(anim_stages[crnt_anim_stage]))
+	print(position)
+	print(get_global_position())
 
 
 
@@ -66,6 +68,7 @@ func take_hit(dmg, body):
 		
 		check_anim_state()
 	
+
 func check_anim_state():
 	var dif = max_health - health  # How much helath has been taken so far
 	var hlth_per_frm = max_health / anim_stages.size()  # How many health lost = 1 frame
@@ -84,6 +87,7 @@ func _on_Area2D_area_entered(body):
 	pass
 
 func _on_Timer_timeout():
+	print("test hit")
 	take_hit(6,self)
 	$Timer.start()
 
