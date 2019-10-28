@@ -21,7 +21,7 @@ export var health = 100
 export var inventory = {'gold': 100, 'wood': 100, 'stone': 50}
 
 # INTERACTION VARIABLES
-signal player_clicked
+signal player_path_request
 onready var interaction_timer = $InteractionTimer 
 var near_resource = false
 var resource = null
@@ -29,8 +29,8 @@ onready var mining_timer = $MiningTimer
 export var mining_timer_len = .8
 var transition = false
 
-
-#ADD WHEN NEEDED var rnd = RandomNumberGenerator.new()
+# RANDOM
+var rnd = RandomNumberGenerator.new()
 
 
 # FOLLOWER VARIABLES
@@ -51,14 +51,18 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
-
+	
 	if crnt_state == 1:  # Walking
 		if follower.unit_offset > .99:
 			crnt_state = 0
 			sprite.set_animation(anim[crnt_state])
 		else:
 			follower.set_offset( follower.get_offset() + (speed*delta))
+
 	
+	if Input.is_action_pressed("ui_mouse_left"):
+		var mouse_pos = get_global_mouse_position()
+		get_new_player_path(mouse_pos)
 	
 ##
 # function to change animation state 
@@ -83,7 +87,8 @@ func _on_PlayerArea2D_area_entered(body):
 			if body.alive:
 				print("near stone", body)
 				self.near_resource = true
-				self.transistion = true
+				self.transition = true
+				self.change_state(0)
 				resource = body
 				follower.look_at(body.position)
 				mine(body)
@@ -107,11 +112,11 @@ func _on_PlayerArea2D_area_entered(body):
 
 
 func _on_PlayerArea2D_area_exited(body):
-	transition = false
-	if body.type == "harvestable object":
-		print("left stone", body)
-		self.near_resource = false
-		self.resource = null
+	if !transition:
+		if body.type == "harvestable object":
+			print("left stone", body)
+			self.near_resource = false
+			self.resource = null
 
 		
 ##
@@ -161,18 +166,18 @@ func transfer(inventory_in):
 
 ##
 # Handles when the player clicks to move to a new tile, getting a nav path from its parent
-func _input(event):
-	if event is InputEventMouseButton:
-		var new_end_point = get_global_mouse_position() 
+func get_new_player_path(mouse_pos):
+		var new_end_point = mouse_pos
 		var new_start_point = follower.position
 		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
 		
-		if !transition:
-			if near_resource: # This stops the area2d from reacting 
-				start_transition()
-				#follower.rotate(-turning_angle)
+
+		if near_resource: # This stops the area2d from reacting 
+			start_transition()
+			self.near_resource = false
+
 	
-		emit_signal("player_clicked", new_start_point, new_end_point, self)
+		emit_signal("player_path_request", new_start_point, new_end_point, self)
 
 
 ##
@@ -194,3 +199,7 @@ func update_path(new_path):
 	print(follower.position)
 
 
+##
+# Returns the sprite's position for more acurate measurements
+func get_sprite_position():
+	return self.sprite.get_global_position()
