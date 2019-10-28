@@ -18,9 +18,9 @@ var first_run = true
 var second_run = false
 
 # Used to control the placement and conection of road tiles
-export var road_tile_truth_table = [4, 64, 33, 131, 66, 16, 1, 513,        # Mapped to a binary value based on nieghbor's cardinal placement 
-								    32, 128, 8, 256, 128, 513, 258, 1024]  # see included spreead sheet(townsfolk_roads_truth_table.ods) 
-export (Array) var road_tile_cypher = ["i1", "s1", "s2", "d1", "d2", "c1", "t1", "t2", "j1"]  # Use index 
+export var road_tile_truth_table = [4, 64, 33, 131, 66, 16, 129, 514,        # Mapped to a binary value based on nieghbor's cardinal placement 
+								    32, 130, 8, 256, 128, 513, 258, 1024]  # see included spreead sheet(townsfolk_roads_truth_table.ods) 
+export (Array) var road_tile_cypher = ["i1", "s2", "s1", "d2", "d1", "c1", "t2", "t1", "j1"]  # Use index 
 export (Dictionary) var road_variant_amts = {"i1": 2, "s2": 3, "s1":3, "d2":2, "d1":2, "c1":2, "t2":2, "t1":2, "j1":2}
 
 ##
@@ -99,7 +99,7 @@ func _process(delta):
 		var crnt_mouse_pos = get_global_mouse_position()
 		print("######crnt_mouse_pos : ", crnt_mouse_pos)
 		print("######crnt_map_pos   : ", world_tilemap.world_to_map(crnt_mouse_pos))
-		print("######crnt_astar_id  : ", tile_map_pos_to_astar_id(world_tilemap.world_to_map(crnt_mouse_pos))))
+		print("######crnt_astar_id  : ", tile_map_pos_to_astar_id(world_tilemap.world_to_map(crnt_mouse_pos)))
 		change_tile_to_road(crnt_mouse_pos)
 
 
@@ -180,7 +180,7 @@ func get_cell_neighbors(pos, output_ID=false):
 	
 	# Return a null value for out of bound points 
 	for i in range(len(output)):
-		if output[i].x < 0 || output[i].y < 0 || output[i].x > size.x || output[i].y > size.y:
+		if output[i].x < 0 || output[i].y < 0 || output[i].x >= size.x || output[i].y >= size.y:
 			output[i] = null
 	if output_ID:
 		for i in range(len(output)):
@@ -241,9 +241,9 @@ func change_tile_to_road(world_pos):
 			
 			# Now check if we need to update any neighboring road tiles
 			var neighbors = get_cell_neighbors(tilemap_pos)
-			#for i in neighbors:
-				#if i != null:
-					#calculate_road_type(i)
+			for i in neighbors:
+				if i != null:
+					calculate_road_type(i)
 
 
 ##
@@ -256,20 +256,29 @@ func calculate_road_type(map_pos):
 	var t_flip_y = false
 	var crnt_point = tile_map_pos_to_astar_id(map_pos.x, map_pos.y)
 	var neighbors = get_cell_neighbors(map_pos, true)
+	neighbors.invert()
 	var tot = 0
 
-	# Make sure this tile is already a road tile
+	###TESTING VARS
+	var neighbor_truth = [0,0,0,0]
+
+
+	# Make sure the current tile is already a road tile
 	if astar_id_lookup[tile_map_pos_to_astar_id(map_pos.x, map_pos.y)][1] == "Road":
 		# Checks to see which neighbors are present and outputs a number based on that  
-		for i in range(len(neighbors)-1, -1,-1):
+		
+		for i in range(0, len(neighbors)):
 			if neighbors[i] != null:
 				if astar_id_lookup[neighbors[i]][1] == "Road":
 					tot += pow(2, i)
+					neighbor_truth[i] = 1
+
+				
 		tot = self.road_tile_truth_table[tot]  # Get a precalculated number that lets the 
 		
 		# Decyphers the bool output into it's tile_type
 		var crnt_mask
-		for i in range(2,len(self.road_tile_cypher)):
+		for i in range(2,len(self.road_tile_cypher)+2):
 			crnt_mask = tot & int(pow(2, i))
 			#print(i," | ", pow(2, i),  " & ", tot, " = ", crnt_mask )
 			if crnt_mask != 0:
@@ -293,6 +302,7 @@ func calculate_road_type(map_pos):
 			print("new_tile_id | ", new_tile_id)
 			print("map_pos     | ", map_pos)
 			print("Flip (x,y)  | ", t_flip_x, t_flip_y)
+			print("dir booltot | ", neighbor_truth)
 			print(neighbors)
 
 			world_tilemap.set_cell(map_pos.x, map_pos.y, new_tile_id, t_flip_x, t_flip_y)
