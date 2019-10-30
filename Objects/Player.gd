@@ -4,7 +4,7 @@ export var type = "player"
 
 # MOVEMENT VARIABLES
 var moving = true
-export var speed = 40
+export var speed = 10
 export var rotation_speed = .9
 var turning_angle = null
 onready var follower = $PlayerFollower
@@ -196,8 +196,8 @@ func transfer(inventory_in):
 ##
 # Controls how we move the player character 
 func move_player(movement_vector, delta):
-	movement_vector = movement_vector.normalized()
-	var new_pos = self.position + movement_vector * (self.speed *  delta)
+	movement_vector = movement_vector.normalized() 
+	movement_vector *= (self.speed * delta)
 	self.move_and_collide(movement_vector)
 
 
