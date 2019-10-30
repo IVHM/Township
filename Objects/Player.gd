@@ -1,11 +1,10 @@
-extends Path2D
+extends KinematicBody2D
 
 export var type = "player"
 
 # MOVEMENT VARIABLES
 var moving = true
 export var speed = 40
-onready var facing_direction = $PlayerFollower/AnimatedSprite/FacingNode
 export var rotation_speed = .9
 var turning_angle = null
 onready var follower = $PlayerFollower
@@ -13,7 +12,9 @@ onready var follower = $PlayerFollower
 
 #ANIMATION VARIABLES
 var crnt_state = 0
-onready var sprite = $PlayerFollower/AnimatedSprite
+# Does text appear here?
+export (NodePath) var sprite  # Your base animatd sprite node 
+# or here?
 export var anim = ["Idle", "Walking","Talking","Waving"]
 export var repeat_chance = .6
 export var personal_name = "Choose-name"
@@ -22,10 +23,10 @@ export var inventory = {'gold': 100, 'wood': 100, 'stone': 50}
 
 # INTERACTION VARIABLES
 signal player_path_request
-onready var interaction_timer = $InteractionTimer 
+export (NodePath) var interaction_timer 
 var near_resource = false
 var resource = null
-onready var mining_timer = $MiningTimer
+export (NodePath) var mining_timer 
 export var mining_timer_len = .8
 var transition = false
 
@@ -41,9 +42,12 @@ onready var near_perimeter = $PlayerFollower/NearPerimeter
 #
 # Called when the node enters the scene tree for the first time.
 func _ready():
-		sprite.set_animation("Idle")
-		sprite.play()
-		crnt_state = 0
+	interaction_timer = get_node(interaction_timer)
+	mining_timer = get_node(mining_timer)
+	sprite = get_node(sprite)
+	sprite.set_animation("Idle")
+	sprite.play()
+	crnt_state = 0
 
 
 
@@ -59,10 +63,31 @@ func _process(delta):
 		else:
 			follower.set_offset( follower.get_offset() + (speed*delta))
 
+
+	### INPUT HUB ###
+	var movement_vector = Vector2(0,0)
+	if !transition or !near_resource:
+		if Input.is_action_pressed("ui_key_w"):	movement_vector.y += -1
+		if Input.is_action_pressed("ui_key_a"): movement_vector.x += -1
+		if Input.is_action_pressed("ui_key_s"):	movement_vector.y += 1	 
+		if Input.is_action_pressed("ui_key_d"):	movement_vector.x += 1
 	
-	if Input.is_action_pressed("ui_mouse_left"):
-		var mouse_pos = get_global_mouse_position()
-		get_new_player_path(mouse_pos)
+	# Handles all behaviors that happen while moving
+	if movement_vector.x != 0 || movement_vector.y != 0:
+		if near_resource:
+			near_resource = false
+			start_transition()
+		sprite.set_animation("Walking")
+	#handles all beahavior while player is stopped
+	else:
+		sprite.set_animation("Idle")
+	if !near_resource:
+		self.look_at(get_global_mouse_position())
+
+	move_player(movement_vector, delta)
+	
+#	print("movement_vector",movement_vector, "current position", kinematic_body.position)
+	move_player(movement_vector, delta)
 	
 ##
 # function to change animation state 
@@ -78,6 +103,7 @@ func reset_pos():
 	self.follower.unit_offset = 0
 
 
+	
 ##
 # Handles interactions with other 2DAreas
 func _on_PlayerArea2D_area_entered(body):
@@ -87,12 +113,15 @@ func _on_PlayerArea2D_area_entered(body):
 			if body.alive:
 				print("near stone", body)
 				self.near_resource = true
-				self.transition = true
+				start_transition()
 				self.change_state(0)
 				resource = body
-				follower.look_at(body.position)
+				self.look_at(body.global_position)
 				mine(body)
 	
+
+
+
 	var a = false # Functionality currently disabled
 				  # needs to be converted once
 	if a:
@@ -165,41 +194,14 @@ func transfer(inventory_in):
 
 
 ##
-# Handles when the player clicks to move to a new tile, getting a nav path from its parent
-func get_new_player_path(mouse_pos):
-		var new_end_point = mouse_pos
-		var new_start_point = follower.position
-		print("new_end_point", new_end_point, " : new_start_point", new_start_point)
-		
-
-		if near_resource: # This stops the area2d from reacting 
-			start_transition()
-			self.near_resource = false
-
-	
-		emit_signal("player_path_request", new_start_point, new_end_point, self)
-
-
-##
-# Takes in a new poolVector2 from the nav_mesh and sets as new Path2D curve
-func update_path(new_path):
-	print(follower.position)
-	var new_curve = Curve2D.new()
-	var pos = follower.position
-	new_curve.add_point(pos)
-
-	for i in new_path:
-		new_curve.add_point(i)
-	
-	self.set_curve(new_curve)
-	print("set curve")
-	reset_pos()
-	print("reset position")
-	change_state(1)
-	print(follower.position)
+# Controls how we move the player character 
+func move_player(movement_vector, delta):
+	movement_vector = movement_vector.normalized()
+	var new_pos = self.position + movement_vector * (self.speed *  delta)
+	self.move_and_collide(movement_vector)
 
 
 ##
 # Returns the sprite's position for more acurate measurements
 func get_sprite_position():
-	return self.sprite.get_global_position()
+	return self.get_global_position()
