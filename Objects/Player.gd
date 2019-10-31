@@ -5,16 +5,15 @@ export var type = "player"
 # MOVEMENT VARIABLES
 var moving = true
 export var speed = 10
-export var rotation_speed = .9
+export var (float) rotation_speed = .8
 var turning_angle = null
-onready var follower = $PlayerFollower
+
 
 
 #ANIMATION VARIABLES
-var crnt_state = 0
-# Does text appear here?
+var state = 0
 export (NodePath) var sprite  # Your base animatd sprite node 
-# or here?
+export (NodePath) var rotation_control # Controls how fast the player character rotates to follow the mouse
 export var anim = ["Idle", "Walking","Talking","Waving"]
 export var repeat_chance = .6
 export var personal_name = "Choose-name"
@@ -44,25 +43,17 @@ onready var near_perimeter = $PlayerFollower/NearPerimeter
 func _ready():
 	interaction_timer = get_node(interaction_timer)
 	mining_timer = get_node(mining_timer)
+	rotation_control = get_node(rotation_control)
 	sprite = get_node(sprite)
-	sprite.set_animation("Idle")
+	sprite.set_animation(anim[self.state])
 	sprite.play()
-	crnt_state = 0
+	self.state = 0
 
 
 
 ##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-
-	
-	if crnt_state == 1:  # Walking
-		if follower.unit_offset > .99:
-			crnt_state = 0
-			sprite.set_animation(anim[crnt_state])
-		else:
-			follower.set_offset( follower.get_offset() + (speed*delta))
-
 
 	### INPUT HUB ###
 	var movement_vector = Vector2(0,0)
@@ -81,8 +72,18 @@ func _process(delta):
 	#handles all beahavior while player is stopped
 	else:
 		sprite.set_animation("Idle")
+
 	if !near_resource:
-		self.look_at(get_global_mouse_position())
+		### MOUSE FOLLOW BEHAVIOUR ###
+		var mouse_pos = get_global_mouse_position()
+		var angle_to_mouse = self.get_angle_to(mouse_pos)
+		var target_angle = self.get_rotation() + angle_to_mouse
+		rotation_control.interpolate_property(self, "rotation", self.get_rotation(),
+											  target_angle, abs(angle_to_mouse)/PI * self.rotation_speed,
+											  Tween.TRANS_QUART, Tween.EASE_OUT) 
+		print("target_angle", target_angle)
+		rotation_control.start()
+
 
 	move_player(movement_vector, delta)
 	
@@ -92,9 +93,9 @@ func _process(delta):
 ##
 # function to change animation state 
 func change_state(state):
-	if crnt_state != state:
-		crnt_state = state
-		sprite.set_animation(anim[crnt_state])	
+	if self.state != state:
+		self.state = state
+		sprite.set_animation(anim[self.state])	
 
 
 ##
@@ -128,8 +129,8 @@ func _on_PlayerArea2D_area_entered(body):
 		print("collision detected (area)")
 	
 		if body.type == "Interaction":
-			crnt_state = rnd.randi_range(2,3)
-			sprite.set_animation(anim[crnt_state])
+			self.state = rnd.randi_range(2,3)
+			sprite.set_animation(anim[self.state])
 			$InteractionTimer.start()
 		
 		if body.type == "Intersection":
