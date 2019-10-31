@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Objects/Player.gd" type="Script" id=1]
 [ext_resource path="res://Objects/Player_Animations.tres" type="SpriteFrames" id=2]
-[ext_resource path="res://Objects/StayPerimeter.gd" type="Script" id=3]
-[ext_resource path="res://Objects/NearPerimeter.gd" type="Script" id=4]
+[ext_resource path="res://Objects/PlayerArea2D.gd" type="Script" id=3]
+[ext_resource path="res://Objects/StayPerimeter.gd" type="Script" id=4]
+[ext_resource path="res://Objects/NearPerimeter.gd" type="Script" id=5]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 3.88005
@@ -20,8 +21,9 @@ radius = 52.4093
 radius = 12.4868
 
 [node name="Player" type="KinematicBody2D"]
-scale = Vector2( 1, 1.17221 )
+scale = Vector2( 1, 1.19199 )
 script = ExtResource( 1 )
+rotation_speed = 2.3
 sprite = NodePath("AnimatedSprite")
 rotation_control = NodePath("AnimatedSprite/RotationalControl")
 interaction_timer = NodePath("InteractionTimer")
@@ -44,10 +46,10 @@ position = Vector2( -1.42697, 0.713482 )
 shape = SubResource( 1 )
 
 [node name="PlayerArea2D" type="Area2D" parent="."]
-editor/display_folded = true
 visible = false
-collision_layer = 512
-collision_mask = 512
+collision_layer = 513
+collision_mask = 513
+script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea2D"]
 position = Vector2( -1.3222, 0.771285 )
@@ -60,26 +62,24 @@ one_shot = true
 [node name="MiningTimer" type="Timer" parent="."]
 
 [node name="FollowerInteractionPerims" type="Node2D" parent="."]
-editor/display_folded = true
 visible = false
 
 [node name="StayPerimeter" type="Area2D" parent="FollowerInteractionPerims"]
 editor/display_folded = true
-script = ExtResource( 3 )
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="FollowerInteractionPerims/StayPerimeter"]
 shape = SubResource( 3 )
 
 [node name="NearPerimeter" type="Area2D" parent="FollowerInteractionPerims"]
 editor/display_folded = true
-script = ExtResource( 4 )
+script = ExtResource( 5 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FollowerInteractionPerims/NearPerimeter"]
 shape = SubResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 scale = Vector2( 1.01155, 0.981494 )
-current = true
 zoom = Vector2( 0.3, 0.3 )
 [connection signal="area_entered" from="PlayerArea2D" to="." method="_on_PlayerArea2D_area_entered"]
 [connection signal="area_exited" from="PlayerArea2D" to="." method="_on_PlayerArea2D_area_exited"]
