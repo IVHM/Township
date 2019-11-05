@@ -4,6 +4,7 @@
 [ext_resource path="res://Assets/MapTiles/Grass_RoadMapTiles.tres" type="TileSet" id=2]
 
 [node name="Map" type="Node2D"]
+position = Vector2( 1.22177, 0 )
 script = ExtResource( 1 )
 world_tilemap = NodePath("TileMap")
 num_grass_tiles = 8

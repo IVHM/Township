@@ -27,7 +27,7 @@ export (Dictionary) var road_variant_amts = {"i1": 2, "s2": 3, "s1":3, "d2":2, "
 # ASTAR VARIABLES
 var astar = AStar.new()  # Calculates/stores the path between different weighted points
 # Used to quickly reference different info about an astar node and its properties
-var astar_id_lookup = {}  # {astar_id: [0:tile_map_pos, 1:tile_type, 2:tile_full_name, 3:tile_world_pos]}
+var astar_id_lookup = {}  # {astar_id: [0:tile_map_pos, 1:tile_type, 2:tile_full_name, 3:world_pos(vector3), 4: world_pos, 5:impassable(Bool), 6: occupying bodies]}
 export var tile_weights = {"Grass" : 4,  # Tells the a star alg what weight to set to each tile type
 						   "Road"  : 1,
 						   "Tile"  : 8}
@@ -136,14 +136,14 @@ func update_astar(i,j):
 	var tile_name = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')
 	var tile_type = tile_name[0]  # now we get it's type for weight calculations
 	var astar_id = tile_map_pos_to_astar_id(i, j)  # Assign the point an id based on its pos
-	var world_coords = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
-	world_coords = Vector3(world_coords.x, world_coords.y, 0)
+	var world_coords_v2 = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
+	var world_coords_v3 = Vector3(world_coords_v2.x, world_coords_v2.y, 0)
 
 	# add all information to the lookup dictionary
-	self.astar_id_lookup[astar_id] = [Vector2(i,j), tile_type, tile_name, world_coords]
+	self.astar_id_lookup[astar_id] = [Vector2(i,j), tile_type, tile_name, world_coords_v3, world_coords_v2 ]
 	#print("Update ", astar_id, self.astar_id_lookup[astar_id])
 	# Add new astar entry to lookup dictionary
-	astar.add_point(astar_id, world_coords, tile_weights[tile_type] )
+	astar.add_point(astar_id, world_coords_v3, tile_weights[tile_type] )
 
 	
 ##
@@ -169,7 +169,15 @@ func initialize_connections():
 					astar.connect_points(crnt_id, tile_map_pos_to_astar_id(crnt_neighbor.x,
 																		   crnt_neighbor.y))
 
+func update_connections(i,j):
+	var id = tile_map_pos_to_astar_id(i, j)
+	var neighbors = get_cell_neighbors(Vector2(i, j), true)
+	var type = self.astar_id_lookup[id][1]
 
+	if type != "Grass" || type != "Road":
+		for crnt_id in neighbors:
+			astar.disconnect_points(crnt_id, id)
+		
 ##
 # Output an array of neighbors for a given map position
 func get_cell_neighbors(pos, output_ID=false):
@@ -316,11 +324,12 @@ func get_astar_path(start_pos, end_pos):
 	end_pos = tile_map_pos_to_astar_id(world_tilemap.world_to_map(end_pos))
 	var id_path = astar.get_id_path(start_pos, end_pos)
 	print(id_path)
-	id_path[0] = world_start_pos
+	var id_path_out = []
+	id_path_out.append(world_start_pos)
 	for i in range(1,len(id_path)):
-		id_path[i] = astar_id_lookup[id_path[i]][3]
+		id_path_out.append(astar_id_lookup[id_path[i]][4])
 	
-	return id_path
+	return id_path_out
 
 			#
 #### TEST FUNCTIONS
