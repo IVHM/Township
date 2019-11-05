@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Assets/Menu_icons/Buttons/buttontexture.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Menu_icons/Buttons/buttontexture_pressed_shine03.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Menu_icons/Buttons/buttontexture_pressed.png" type="Texture" id=3]
+[ext_resource path="res://Gui/Interactions/InteractionButton.gd" type="Script" id=4]
+[ext_resource path="res://Assets/fonts/HeinzHeinrich-Regular.otf" type="DynamicFontData" id=5]
+[ext_resource path="res://Assets/Menu_icons/Interactions/Cancel.png" type="Texture" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 9
+outline_color = Color( 0.733333, 0.733333, 0.576471, 1 )
+font_data = ExtResource( 5 )
+
+[node name="InteractionButton" type="TextureButton"]
+margin_right = 145.0
+margin_bottom = 24.0
+rect_scale = Vector2( 0.994648, 0.972025 )
+texture_normal = ExtResource( 1 )
+texture_pressed = ExtResource( 2 )
+texture_hover = ExtResource( 3 )
+stretch_mode = 3
+script = ExtResource( 4 )
+btn_label = NodePath("Label")
+icon_highlight = NodePath("Highlight")
+icon = NodePath("Icon")
+
+[node name="Label" type="Label" parent="."]
+margin_left = 13.4156
+margin_top = 1.40864
+margin_right = 93.4156
+margin_bottom = 29.4086
+rect_scale = Vector2( 1.20246, 0.882416 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.0627451, 0.0784314, 0.0745098, 0.815686 )
+custom_colors/font_outline_modulate = Color( 0.866667, 0.423529, 0.423529, 1 )
+custom_colors/font_color_shadow = Color( 0.952941, 0.929412, 0.8, 0.407843 )
+custom_constants/shadow_offset_x = -1
+custom_constants/shadow_offset_y = 1
+custom_constants/shadow_as_outline = 0
+text = "Cancel"
+align = 1
+
+[node name="Highlight" type="TextureRect" parent="."]
+modulate = Color( 0.952941, 0.929412, 0.8, 0.407843 )
+margin_left = 105.0
+margin_top = 6.0
+margin_right = 124.0
+margin_bottom = 20.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 1
+
+[node name="Icon" type="TextureRect" parent="."]
+modulate = Color( 0.133333, 0.121569, 0.121569, 0.862745 )
+margin_left = 106.0
+margin_top = 2.0
+margin_right = 126.0
+margin_bottom = 22.0
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 6
