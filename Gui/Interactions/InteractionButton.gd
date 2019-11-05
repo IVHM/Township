@@ -1,20 +1,17 @@
 extends TextureButton
 
-export var interaction_types = ["Null","Talk", "Trade","Job","Cancel","Mine","Chop","Open"]
-export (int, "Null","Talk", "Trade","Job","Cancel","Mine","Chop","Open") var button_type = 0
+# File reference variables
+export (String, "Null","Talk", "Trade","Job","Cancel","Mine","Chop","Open") var button_type = "Null"
 export (String) var icon_folder_path = "res://Assets/Menu_icons/Interactions/" 
-
+# Display nodes
 export (NodePath) var btn_label
 export (NodePath) var icon_highlight
-#export (Texture) var icon_highlight_texture
 export (NodePath) var icon
-#export (Texture) var icon_texture
 
 signal interaction_button_pressed
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+###TESTING VARS
+export var testing = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -22,24 +19,32 @@ func _ready():
 	icon = get_node(icon)
 	icon_highlight= get_node(icon_highlight)
 
-	btn_label.set_text(interaction_types[button_type])
-	icon.set_texture(load(icon_folder_path + interaction_types[button_type] + ".png"))
-	icon_highlight.set_texture(load(icon_folder_path + interaction_types[button_type] + ".png"))
+	if testing == true:
+		generate()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
 ##
-# Sets the button_type based on an inputed int
+# Sets the button_type based on an inputed string derived from the global var interaction types
 func set_button_type(button_type_in):
 	var value_type = typeof(button_type_in)
-	if value_type == TYPE_INT || value_type == TYPE_REAL:
-		self.button_type = int(button_type_in)
+	if value_type == TYPE_STRING:
+		self.button_type = button_type_in
 	else:
-		print("please use an int or float  to set interactive button type")
+		print("please use an string to set interactive button type")
+		print("These can be found in GLOBALS.gd")
+##
+# Creates the button with it's stored text and icon data
+func generate():
+	btn_label.set_text(button_type)
+	icon.set_texture(load(icon_folder_path + button_type + ".png"))
+	icon_highlight.set_texture(load(icon_folder_path + button_type + ".png"))
 
 
+##
+#
 func _on_InteractionsButton_pressed():
 	emit_signal("interaction_button_pressed", button_type)
 	print("marco1?")
