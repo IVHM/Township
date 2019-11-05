@@ -3,5 +3,5 @@
 [ext_resource path="res://Assets/fonts/Perfect DOS VGA 437.ttf" type="DynamicFontData" id=1]
 
 [resource]
-size = 12
+size = 10
 font_data = ExtResource( 1 )
