@@ -1,12 +1,12 @@
 extends KinematicBody2D
 
-export var type = "player"
 
 # MOVEMENT VARIABLES
 var moving = true
 export var speed = 10
-export var (float) rotation_speed = .8
-var turning_angle = null
+export var rotation_speed = .8
+export var rotation_drag_margin = Vector2(-0.1, 0.1)
+
 
 
 
@@ -77,12 +77,14 @@ func _process(delta):
 		### MOUSE FOLLOW BEHAVIOUR ###
 		var mouse_pos = get_global_mouse_position()
 		var angle_to_mouse = self.get_angle_to(mouse_pos)
-		var target_angle = self.get_rotation() + angle_to_mouse
-		rotation_control.interpolate_property(self, "rotation", self.get_rotation(),
-											  target_angle, abs(angle_to_mouse)/PI * self.rotation_speed,
-											  Tween.TRANS_QUART, Tween.EASE_OUT) 
-		print("target_angle", target_angle)
-		rotation_control.start()
+		
+		if angle_to_mouse < self.rotation_drag_margin.x || angle_to_mouse > rotation_drag_margin.y:
+			var target_angle = self.get_rotation() + angle_to_mouse
+			rotation_control.interpolate_property(self, "rotation", self.get_rotation(),
+												target_angle, abs(angle_to_mouse)/PI * self.rotation_speed,
+												Tween.TRANS_QUART, Tween.EASE_OUT) 
+		
+			rotation_control.start()
 
 
 	move_player(movement_vector, delta)
