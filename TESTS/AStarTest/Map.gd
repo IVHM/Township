@@ -255,7 +255,6 @@ func change_tile_to_road(world_pos):
 
 
 ##
-
 # Controls how roads are drawn depending on the neighbors around them.
 # Takes in a Vector2, and updates the tilemap cell and astar point in the lookup
 func calculate_road_type(map_pos):
@@ -332,6 +331,14 @@ func get_astar_path(start_pos, end_pos):
 	return id_path_out
 
 			#
+##
+# Returns the astar_id_lookup entry for a given world position
+func get_cell_info(pos):
+	pos = world_tilemap.world_to_map(pos)
+	var pos_id  = self.tile_map_pos_to_astar_id(pos)
+	return(astar_id_lookup(pos_id))
+
+#########			
 #### TEST FUNCTIONS
 
 ##
