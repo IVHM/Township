@@ -99,7 +99,7 @@ func _process(delta):
 		var crnt_mouse_pos = get_global_mouse_position()
 		print("######crnt_mouse_pos : ", crnt_mouse_pos)
 		print("######crnt_map_pos   : ", world_tilemap.world_to_map(crnt_mouse_pos))
-		print("######crnt_astar_id  : ", tile_map_pos_to_astar_id(world_tilemap.world_to_map(crnt_mouse_pos)))
+		print("######crnt_astar_id  : ", UTIL.tile_map_pos_to_astar_id(world_tilemap.world_to_map(crnt_mouse_pos)))
 		change_tile_to_road(crnt_mouse_pos)
 
 
@@ -135,7 +135,7 @@ func update_astar(i,j):
 	# Here we intialize the info for the astar id to cell lookup
 	var tile_name = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')
 	var tile_type = tile_name[0]  # now we get it's type for weight calculations
-	var astar_id = tile_map_pos_to_astar_id(i, j)  # Assign the point an id based on its pos
+	var astar_id = UTIL.tile_map_pos_to_astar_id(i, j)  # Assign the point an id based on its pos
 	var world_coords_v2 = world_tilemap.map_to_world(Vector2(i,j)) + Vector2(tile_size/2, tile_size/2) 
 	var world_coords_v3 = Vector3(world_coords_v2.x, world_coords_v2.y, 0)
 
@@ -147,7 +147,7 @@ func update_astar(i,j):
 
 	
 ##
-# Creates the oaths between all the astar points
+# Creates the paths between all the astar points
 func initialize_connections():
 	# Conects a cell with its valid neighbors.
 	for crnt_id in self.astar_id_lookup:
@@ -158,19 +158,19 @@ func initialize_connections():
 		
 		for crnt_neighbor in neighbors:
 			if crnt_neighbor != null:
-				var n_tile_type = self.astar_id_lookup[tile_map_pos_to_astar_id(crnt_pos.x, crnt_pos.y)][1]
+				var n_tile_type = self.astar_id_lookup[UTIL.tile_map_pos_to_astar_id(crnt_pos.x, crnt_pos.y)][1]
 				if n_tile_type == "Tile":
 					pass
 				elif crnt_neighbor.x < 0 || crnt_neighbor.y < 0 || crnt_neighbor.x >= size.x || crnt_neighbor.y >= size.y:
 					pass
-				elif self.astar_id_lookup[tile_map_pos_to_astar_id(crnt_neighbor.x, crnt_neighbor.y)][1] == "Tile":
+				elif self.astar_id_lookup[UTIL.tile_map_pos_to_astar_id(crnt_neighbor.x, crnt_neighbor.y)][1] == "Tile":
 					pass
 				else:
-					astar.connect_points(crnt_id, tile_map_pos_to_astar_id(crnt_neighbor.x,
+					astar.connect_points(crnt_id, UTIL.tile_map_pos_to_astar_id(crnt_neighbor.x,
 																		   crnt_neighbor.y))
 
 func update_connections(i,j):
-	var id = tile_map_pos_to_astar_id(i, j)
+	var id = UTIL.tile_map_pos_to_astar_id(i, j)
 	var neighbors = get_cell_neighbors(Vector2(i, j), true)
 	var type = self.astar_id_lookup[id][1]
 
@@ -193,7 +193,7 @@ func get_cell_neighbors(pos, output_ID=false):
 	if output_ID:
 		for i in range(len(output)):
 			if output[i] != null:
-				output[i] = tile_map_pos_to_astar_id(output[i].x, output[i].y)
+				output[i] = UTIL.tile_map_pos_to_astar_id(output[i].x, output[i].y)
 
 	return output
 
@@ -227,13 +227,7 @@ func draw_astar_connections():
 					astar_visualizer.add_child(self.astar_lines[crnt_pair])
 
 
-##
-# Translates the map tile's pos to it's correspoding astar point's id take sin a vector2 or two numbers
-func tile_map_pos_to_astar_id(i,j=null):
-	if j == null:
-		return int((i.x * size.y) + i.y)
-	else:
-		return int((i * self.size.y) + j) 
+
 	
 	
 ##
@@ -261,7 +255,7 @@ func calculate_road_type(map_pos):
 	var road_type = null
 	var t_flip_x = false 
 	var t_flip_y = false
-	var crnt_point = tile_map_pos_to_astar_id(map_pos.x, map_pos.y)
+	var crnt_point = UTIL.tile_map_pos_to_astar_id(map_pos.x, map_pos.y)
 	var neighbors = get_cell_neighbors(map_pos, true)
 	neighbors.invert()
 	var tot = 0
@@ -271,7 +265,7 @@ func calculate_road_type(map_pos):
 
 
 	# Make sure the current tile is already a road tile
-	if astar_id_lookup[tile_map_pos_to_astar_id(map_pos.x, map_pos.y)][1] == "Road":
+	if astar_id_lookup[UTIL.tile_map_pos_to_astar_id(map_pos.x, map_pos.y)][1] == "Road":
 		# Checks to see which neighbors are present and outputs a number based on that  
 		
 		for i in range(0, len(neighbors)):
@@ -319,8 +313,8 @@ func calculate_road_type(map_pos):
 # Gets path between two points in the form of 
 func get_astar_path(start_pos, end_pos):
 	var world_start_pos = start_pos
-	start_pos = tile_map_pos_to_astar_id(world_tilemap.world_to_map(start_pos))
-	end_pos = tile_map_pos_to_astar_id(world_tilemap.world_to_map(end_pos))
+	start_pos = UTIL.tile_map_pos_to_astar_id(world_tilemap.world_to_map(start_pos))
+	end_pos = UTIL.tile_map_pos_to_astar_id(world_tilemap.world_to_map(end_pos))
 	var id_path = astar.get_id_path(start_pos, end_pos)
 	print(id_path)
 	var id_path_out = []
@@ -335,7 +329,7 @@ func get_astar_path(start_pos, end_pos):
 # Returns the astar_id_lookup entry for a given world position
 func get_cell_info(pos):
 	pos = world_tilemap.world_to_map(pos)
-	var pos_id  = self.tile_map_pos_to_astar_id(pos)
+	var pos_id  = self.UTIL.tile_map_pos_to_astar_id(pos)
 	return(astar_id_lookup(pos_id))
 
 #########			
