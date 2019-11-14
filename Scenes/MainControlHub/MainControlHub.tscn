@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/MainControlHub/MainControlHub.gd" type="Script" id=1]
+[ext_resource path="res://TESTS/AStarTest/Map.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Objects/MainCamera.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/MainControlHub/FrameInformationTimer.gd" type="Script" id=5]
+
+[node name="MainControlHub" type="Node2D"]
+script = ExtResource( 1 )
+world_map = NodePath("Map")
+player = NodePath("Player")
+
+[node name="Map" parent="." instance=ExtResource( 2 )]
+size = Vector2( 64, 64 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1.02667, -2.05337 )
+
+[node name="MainCamera" parent="Player" instance=ExtResource( 4 )]
+anchor_mode = 1
+current = true
+zoom = Vector2( 0.5, 0.5 )
+
+[node name="FrameInformationTimer" type="Timer" parent="."]
+autostart = true
+script = ExtResource( 5 )
+output_flags = 31
+[connection signal="player_map_call" from="Player" to="." method="_on_Player_player_map_call"]
+[connection signal="timeout" from="FrameInformationTimer" to="FrameInformationTimer" method="_on_FrameInformationTimer_timeout"]

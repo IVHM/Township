@@ -1,0 +1,141 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Gui/PlayerMenu/menu_backdrop_outline.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Gui/PlayerMenu/player_portrait_default.png" type="Texture" id=2]
+[ext_resource path="res://Assets/fonts/Apple ][.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Assets/Gui/PlayerMenu/quick_slot_outline.png" type="Texture" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 7
+font_data = ExtResource( 3 )
+
+[node name="PlayerMenu" type="Node2D"]
+
+[node name="MenuBackground" type="TextureRect" parent="."]
+margin_left = 16.1826
+margin_top = 7.36633
+margin_right = 295.183
+margin_bottom = 185.366
+texture = ExtResource( 1 )
+stretch_mode = 6
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="ReferenceRect" type="ReferenceRect" parent="MenuBackground"]
+margin_right = 280.0
+margin_bottom = 180.0
+size_flags_horizontal = 3
+border_color = Color( 0.360784, 1, 0, 1 )
+
+[node name="Tabs" type="Tabs" parent="MenuBackground/ReferenceRect"]
+margin_left = 121.0
+margin_top = 22.0
+margin_right = 259.0
+margin_bottom = 46.0
+drag_to_rearrange_enabled = true
+
+[node name="PlayerPortrait" type="TextureRect" parent="MenuBackground/ReferenceRect"]
+margin_left = 10.5064
+margin_top = 7.28141
+margin_right = 53.5064
+margin_bottom = 52.2814
+texture = ExtResource( 2 )
+stretch_mode = 6
+
+[node name="Inventory" type="GridContainer" parent="MenuBackground/ReferenceRect"]
+margin_left = 121.0
+margin_top = 46.0
+margin_right = 269.0
+margin_bottom = 157.0
+custom_constants/vseparation = 2
+custom_constants/hseparation = 2
+columns = 5
+
+[node name="ReferenceRect" type="ReferenceRect" parent="MenuBackground/ReferenceRect"]
+margin_left = 58.0333
+margin_top = 12.6795
+margin_right = 98.0333
+margin_bottom = 52.6795
+rect_scale = Vector2( 1.249, 1.06184 )
+
+[node name="Label" type="Label" parent="MenuBackground/ReferenceRect/ReferenceRect"]
+margin_left = 1.26625
+margin_top = 1.55332
+margin_right = 96.2663
+margin_bottom = 31.5533
+rect_scale = Vector2( 0.423537, 0.510286 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_constants/line_spacing = 0
+text = "Character 
+name
+"
+valign = 1
+autowrap = true
+
+[node name="ReferenceRect2" type="ReferenceRect" parent="MenuBackground/ReferenceRect"]
+margin_left = 20.0698
+margin_top = 63.5543
+margin_right = 60.0698
+margin_bottom = 103.554
+
+[node name="TextureRect" type="TextureRect" parent="MenuBackground/ReferenceRect/ReferenceRect2"]
+margin_left = -13.0
+margin_top = -1.0
+margin_right = 86.0
+margin_bottom = 71.0
+texture = ExtResource( 4 )
+stretch_mode = 6
+
+[node name="QuickSlots" type="GridContainer" parent="MenuBackground/ReferenceRect/ReferenceRect2"]
+margin_left = -2.0
+margin_top = 10.0
+margin_right = 77.0
+margin_bottom = 60.0
+custom_constants/vseparation = 1
+custom_constants/hseparation = 2
+columns = 3
+
+[node name="Button" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_right = 25.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button2" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_left = 27.0
+margin_right = 52.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button3" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_left = 54.0
+margin_right = 79.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button4" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_top = 25.0
+margin_right = 25.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button5" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_left = 27.0
+margin_top = 25.0
+margin_right = 52.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button6" type="Button" parent="MenuBackground/ReferenceRect/ReferenceRect2/QuickSlots"]
+margin_left = 54.0
+margin_top = 25.0
+margin_right = 79.0
+margin_bottom = 49.0
+size_flags_horizontal = 3
+size_flags_vertical = 3

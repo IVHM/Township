@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Map/Map.gd" type="Script" id=1]
+[ext_resource path="res://Assets/MapTiles/Grass_RoadMapTiles.tres" type="TileSet" id=2]
+
+
+[node name="Map" type="Node2D"]
+position = Vector2( 1.22177, 0 )
+script = ExtResource( 1 )
+world_tilemap = NodePath("TileMap")
+num_grass_tiles = 8
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+cell_y_sort = true
+format = 1
+tile_data = PoolIntArray( 393241, 20, 0, 524311, 20, 0 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="AstarVisualization" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 100.381, 61.1113 )
+zoom = Vector2( 0.4, 0.4 )
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

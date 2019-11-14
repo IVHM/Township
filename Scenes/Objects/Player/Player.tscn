@@ -1,0 +1,89 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Scenes/Objects/Player.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Objects/Player_Animations.tres" type="SpriteFrames" id=2]
+[ext_resource path="res://Scenes/Objects/PlayerArea2D.gd" type="Script" id=3]
+[ext_resource path="res://Scenes/Objects/StayPerimeter.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/Objects/NearPerimeter.gd" type="Script" id=5]
+
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 3.88005
+height = 3.38593
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 5.26371
+height = 6.53769
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 52.4093
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 12.4868
+
+[node name="Player" type="KinematicBody2D"]
+scale = Vector2( 1, 1.19199 )
+script = ExtResource( 1 )
+speed = 50
+rotation_speed = 2.3
+sprite = NodePath("AnimatedSprite")
+rotation_control = NodePath("AnimatedSprite/RotationalControl")
+interaction_timer = NodePath("InteractionTimer")
+mining_timer = NodePath("MiningTimer")
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+editor/display_folded = true
+position = Vector2( -0.1346, -0.15778 )
+rotation = 1.5708
+frames = ExtResource( 2 )
+animation = "Idle"
+playing = true
+offset = Vector2( -0.306716, -1.83089 )
+
+[node name="RotationalControl" type="Tween" parent="AnimatedSprite"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( -1.42697, 0.713482 )
+shape = SubResource( 1 )
+
+[node name="PlayerArea2D" type="Area2D" parent="."]
+visible = false
+collision_layer = 513
+collision_mask = 513
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea2D"]
+position = Vector2( -1.3222, 0.771285 )
+shape = SubResource( 2 )
+
+[node name="InteractionTimer" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="MiningTimer" type="Timer" parent="."]
+
+[node name="FollowerInteractionPerims" type="Node2D" parent="."]
+visible = false
+
+[node name="StayPerimeter" type="Area2D" parent="FollowerInteractionPerims"]
+editor/display_folded = true
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="FollowerInteractionPerims/StayPerimeter"]
+shape = SubResource( 3 )
+
+[node name="NearPerimeter" type="Area2D" parent="FollowerInteractionPerims"]
+editor/display_folded = true
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FollowerInteractionPerims/NearPerimeter"]
+shape = SubResource( 4 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+scale = Vector2( 1.01155, 0.981494 )
+zoom = Vector2( 0.3, 0.3 )
+[connection signal="area_entered" from="PlayerArea2D" to="." method="_on_PlayerArea2D_area_entered"]
+[connection signal="area_exited" from="PlayerArea2D" to="." method="_on_PlayerArea2D_area_exited"]
+[connection signal="timeout" from="InteractionTimer" to="." method="_on_InteractionTimer_timeout"]
+[connection signal="timeout" from="MiningTimer" to="." method="_on_MiningTimer_timeout"]

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scenes/Objects/MapObjects/MapObjects_handler.gd" type="Script" id=1]
+
+
+[node name="MapObjects_handler" type="Node2D"]
+script = ExtResource( 1 )
+objects_filepath = "res://Objects/MapObjects/"
+testing = true
+test_object = "Barrel"
+test_position = Vector2( 18, 8 )
