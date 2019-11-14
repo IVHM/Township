@@ -17,12 +17,23 @@ func remove_all_children(node):
 # Translates the map tile's pos to it's correspoding astar point's id take sin a vector2 or two numbers
 func map_pos_to_id(i,j=null):
 	if j == null:
-		return int((i.x * size.y) + i.y)
-	else:
-		return int((i * self.size.y) + j) 
+		j = i.y
+		i = i.x
+	return int((i * GLOBALS.MAP_SIZE.y) + j) 
+
+func world_pos_to_id(i,j=null):
+	if j == null:
+		j = i.y
+		i = i.x
+	return map_pos_to_id(world_pos_to_map(i,j))
+
+func world_pos_to_map(i,j=null):
+	if j == null:
+		j = i.y
+		i = i.x
+	return Vector2(floor(i / GLOBALS.TILE_SIZE.x),
+				   floor(j / GLOBALS.TILE_SIZE.y))
 	
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
