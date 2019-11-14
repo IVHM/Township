@@ -1,10 +1,11 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/MainControlHub/MainControlHub.gd" type="Script" id=1]
-[ext_resource path="res://TESTS/AStarTest/Map.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Objects/MainCamera.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Map/Map.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Objects/Player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Objects/SmartCamera/MainCamera.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/MainControlHub/FrameInformationTimer.gd" type="Script" id=5]
+
 
 [node name="MainControlHub" type="Node2D"]
 script = ExtResource( 1 )

@@ -1,6 +1,6 @@
 [gd_scene load_steps=51 format=2]
 
-[ext_resource path="res://Scenes/Objects/Pupper.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Objects/Pupper/Pupper.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Pupper/Happy_pup34.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Pupper/Happy_pup35.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Pupper/Happy_pup36.png" type="Texture" id=4]
@@ -46,7 +46,8 @@
 [ext_resource path="res://Assets/Pupper/Happy_pup10.png" type="Texture" id=44]
 [ext_resource path="res://Assets/Pupper/Happy_pup11.png" type="Texture" id=45]
 [ext_resource path="res://Assets/Pupper/Happy_pup12.png" type="Texture" id=46]
-[ext_resource path="res://Scenes/Objects/PupperArea2D.gd" type="Script" id=47]
+[ext_resource path="res://Scenes/Objects/Pupper/PupperArea2D.gd" type="Script" id=47]
+
 
 
 [sub_resource type="Curve2D" id=1]
