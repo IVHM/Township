@@ -1,23 +1,43 @@
 extends Node
 
+#### TYPE CLASSIFICATION VARIABELS
+
 # Used to determine the bit flags of an interaction menu
 # All corresponding png resources must be named exactly the same
+# THESE NUMBERS COME FROM THE SPREEDSHEET object_bitflags_for_interaction_menu
 export var INTERACTION_TYPES = {
-			"Null"   : 1,
-			"Talk"   : 2,
-			"Trade"  : 4,
-			"Job"    : 8,
-			"Cancel" : 16,
-			"Mine"   : 32,
-			"Chop"   : 64,
-			"Open"   : 128,
-			"Place"  : 356
-						   }
+			"Talk"  : 1, 
+			"Trade" : 2, 
+			"Job"   : 4, 
+			"Cancel": 8, 
+			"Mine"  : 16,
+			"Chop"  : 32, 
+			"Pickup": 64, 
+			"Open"  : 128, 
+			"Plant" : 256, 
+			"Craft" : 512, 
+			"Break" : 1024, 
+			"Haul"  : 2048, 
+			"Move"  : 4096, 
+			"Give"  : 8192} 
 
+
+# All the different menu types the menu handler can generate
 export var MENU_TYPES = ["Interactions"]
-# Used to generate all the different objects on the game map						   
+# All the different objects that can be generated on the game map						   
 export var OBJECT_TYPES = ["Barrel"]
+# The different bitflags for the each objects interactions
+export var object_interaction_bitflags = {
+			"Agent"    : 10247,
+			"Stone"    : 1040,
+			"Container": 4288,
+			"Pupper"   : 10245,
+			"Tree"     : 1200,
+			"Soil"     : 336,
+			"Furniture": 5184,
+			"Grass"    : 1280}
 
+}
 #### MAP VARIABLES
 
 export var MAP_SIZE = Vector2(30,30)
