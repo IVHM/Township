@@ -152,8 +152,7 @@ func _on_TownsfolkTradeNextPage_pressed():
 		switch_page("p")
 
 
-##
-# 
+
 func _on_TownsfolkTradePrevPage_pressed():
 	var prev_page = self.current_townsfolk_page
 	if self.num_townsfolk_pages > 1:

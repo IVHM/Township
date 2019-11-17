@@ -16,7 +16,7 @@ func _on_FrameInformationTimer_timeout():
 	if output_flags & 16:
 		print("Frames per sec   : ", Performance.get_monitor(Performance.TIME_FPS))
 	if output_flags & 1:
-		print("Texture Mem Used : ", Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED))
+		print("Texture Mem Used : ", int(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED)) / MB, "mb")
 	if output_flags & 2:
 		print("Num of objects   : ", Performance.get_monitor(Performance.OBJECT_COUNT))
 	if output_flags & 4:

@@ -100,6 +100,8 @@ func change_state(state):
 		sprite.set_animation(self.animation_tags[self.crnt_state])	
 
 
+##
+# COntrols different interactions with area type physics bodies
 func _on_Area2D_area_entered(area):
 	print("######################")
 	print("pupper entered area: ", area.type)
@@ -108,6 +110,7 @@ func _on_Area2D_area_entered(area):
 		#boredom_timer.start()
 		stop_moving()
 
+
 func _on_Area2D_area_exited(area):
 	print("######################")
 	print("pupper exited area: ", area.type)
@@ -115,12 +118,18 @@ func _on_Area2D_area_exited(area):
 		request_new_path()
 		leader_search_timer.start()
 
+##
+# Checks to see if leader's path has changed after a certain amount of time
 func _on_LeaderSearchTimer_timeout():
 	request_new_path()
 
 
+##
+# Emits a signal requesting a new path to player
 func request_new_path():
 	emit_signal("pupper_path_request", sprite.get_global_position(), leader.get_sprite_position(), self)
 
+##
+#
 func _on_AnimatedSprite_animation_finished():
 	pass

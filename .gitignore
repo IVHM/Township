@@ -1,0 +1,26 @@
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+
+# Mono-specific ignores
+.mono/
+
+*.import
+
+addons/
+
+TestingWorld.gd
+
+Scenes/pathtest dependcies/
+
+Scenes/PathTest.tscn
+
+TESTS/Extending scenes/
+Assets/Menu_icons/Hammer_loader clone.ase
+Gui/Interactions/InteractionsButton.tscn
+
+TESTS/Kinematic_body_tests/
+
+Legacy/
