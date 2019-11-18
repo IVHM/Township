@@ -58,39 +58,13 @@ func _ready():
 ##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-
-	### INPUT HUB ###
-	var mouse_pos = get_global_mouse_position()
-	### INTERACTION CONTROLS
-	if Input.is_action_pressed("ui_mouse_left"):
-		emit_signal("player_map_call", mouse_pos)
-
-	### MENU CONTROLS 
-	if Input.is_action_pressed("ui_open_player_inventory"):
-		emit_signal("player_menu_request")
-
-
-	### MOVEMENT CONTROLS
-	var movement_vector = Vector2(0,0)
-	if !transition or !near_resource:
-		if Input.is_action_pressed("ui_up"):	movement_vector.y += -1
-		if Input.is_action_pressed("ui_left"): movement_vector.x += -1
-		if Input.is_action_pressed("ui_down"):	movement_vector.y += 1	 
-		if Input.is_action_pressed("ui_right"):	movement_vector.x += 1
 	
-	# Handles all behaviors that happen while moving
-	if movement_vector.x != 0 || movement_vector.y != 0:
-		if near_resource:
-			near_resource = false
-			start_transition()
-		sprite.set_animation("Walking")
-	# Handles all beahavior while player is stopped
-	else:
-		sprite.set_animation("Idle")
 
-	move_player(movement_vector, delta)
 
+	
+	
 	### MOUSE FOLLOW BEHAVIOUR ###
+	var mouse_pos = get_global_mouse_position()
 	if !near_resource:
 		var angle_to_mouse = self.get_angle_to(mouse_pos)
 		
@@ -211,6 +185,19 @@ func transfer(inventory_in):
 ##
 # Controls how we move the player character 
 func move_player(movement_vector, delta):
+	if transition:
+		movement_vector = Vector2(0,0)
+
+	# Handles all behaviors that happen while moving
+	if movement_vector.x != 0 || movement_vector.y != 0:
+		if near_resource:
+			near_resource = false
+			start_transition()
+		sprite.set_animation("Walking")
+	# Handles all beahavior while player is stopped
+	else:
+		sprite.set_animation("Idle")
+
 	movement_vector = movement_vector.normalized() 
 	movement_vector *= (self.speed * delta)
 	self.move_and_collide(movement_vector)

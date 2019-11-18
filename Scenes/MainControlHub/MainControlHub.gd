@@ -6,6 +6,8 @@ export (NodePath) var object_handler
 export (NodePath) var menu_handler
 export (NodePath) var player
 
+var menu_open = false
+
 
 #### TESTING VARIABLES
 export (bool) var testing = false
@@ -20,11 +22,41 @@ func _ready():
 	player = get_node(player)
 	
 	#### SIGNAL CONNECTIONS
-	player.connect("player_map_call", self, "_on_player_map_call")
+	#player.connect("player_map_call", self, "_on_player_map_call")
+
+
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func _process(delta):
+	#### PLAYER INPUT CONTROLS
+	var mouse_pos = get_global_mouse_position()
+
+	### INTERACTION CONTROLS
+	if Input.is_action_pressed("ui_mouse_left"):
+		if menu_open:
+			var menu_area = menu_handler.get_current_menu_area()
+			if mouse_pos.x in range(menu_area[0].x, menu_area[1].x):
+				if mouse_pos.y in range(menu_area[0].y, menu_area[1].y):
+					pass
+				else:
+					menu_handler.close_current_menu()
+					player_map_call(mouse_pos)
+		else:
+			player_map_call(mouse_pos)
+
+			## MENU CONTROLS 
+	if Input.is_action_pressed("ui_open_player_inventory"):
+		print("player open inventory")
+
+	## MOVEMENT CONTROLS
+	var movement_vector = Vector2(0,0)
+	if Input.is_action_pressed("ui_up"):	movement_vector.y += -1
+	if Input.is_action_pressed("ui_left"): movement_vector.x += -1
+	if Input.is_action_pressed("ui_down"):	movement_vector.y += 1	 
+	if Input.is_action_pressed("ui_right"):	movement_vector.x += 1
+	
+	player.move_player(movement_vector, delta)
 
 
 
@@ -32,7 +64,7 @@ func _ready():
 
 ##
 # Called whenever a player requests interaction information about a certain cell
-func _on_player_map_call(pos):
+func player_map_call(pos):
 	if t_print: print("player_map_call")
 	var cell_type = world_map.get_cell_info(pos)
 	var cell_objects = object_handler.check_cell(pos, null, true)
