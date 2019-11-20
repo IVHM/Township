@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Gui/Interactions/WorldInteractionMenu.gd" type="Script" id=1]
-[ext_resource path="res://Gui/Interactions/InteractionButton.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Gui/Interactions/WorldInteractionMenu.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Gui/Interactions/InteractionButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Menu_icons/Buttons/panel_texture.png" type="Texture" id=3]
 [ext_resource path="res://Assets/fonts/label_font.tres" type="DynamicFont" id=4]
-[ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=5]
 
 [sub_resource type="StyleBoxTexture" id=1]
 texture = ExtResource( 3 )
@@ -426,58 +425,58 @@ WindowDialog/styles/panel = null
 [node name="WorldInteractionMenu" type="Node2D"]
 script = ExtResource( 1 )
 pop_up = NodePath("WorldInteractionControl/Popup")
-menu_label = NodePath("WorldInteractionControl/Popup/MarginContainer/VBoxContainer2/Label")
-choice_container = NodePath("WorldInteractionControl/Popup/MarginContainer/VBoxContainer2/ChoiceContainer")
+pop_up_control = NodePath("WorldInteractionControl/Popup/PopupDisplay")
+menu_label = NodePath("WorldInteractionControl/Popup/PopupDisplay/VBoxContainer2/Label")
+choice_container = NodePath("WorldInteractionControl/Popup/PopupDisplay/VBoxContainer2/ChoiceContainer")
 interaction_btn = ExtResource( 2 )
-testing = true
 testing_choices = 110
 
 [node name="WorldInteractionControl" type="Control" parent="."]
-margin_left = 59.0
-margin_top = 2.0
-margin_right = 121.0
-margin_bottom = 42.0
+margin_right = 62.0
+margin_bottom = 40.0
 rect_pivot_offset = Vector2( 20, 20 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 
 [node name="Popup" type="Popup" parent="WorldInteractionControl"]
 visible = true
-margin_right = 187.0
-margin_bottom = 91.0
+margin_top = 0.263523
+margin_right = 73.0
+margin_bottom = 45.2635
 grow_horizontal = 2
 grow_vertical = 2
-rect_scale = Vector2( 0.331328, 0.402304 )
 size_flags_horizontal = 3
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="MarginContainer" type="MarginContainer" parent="WorldInteractionControl/Popup"]
-margin_left = 5.27238
-margin_top = -0.575928
-margin_right = 184.272
-margin_bottom = 93.4241
+[node name="PopupDisplay" type="MarginContainer" parent="WorldInteractionControl/Popup"]
+margin_right = 146.0
+margin_bottom = 91.0
+rect_scale = Vector2( 0.5, 0.5 )
 
-[node name="PanelContainer" type="PanelContainer" parent="WorldInteractionControl/Popup/MarginContainer"]
-margin_right = 179.0
-margin_bottom = 94.0
+[node name="PanelContainer" type="PanelContainer" parent="WorldInteractionControl/Popup/PopupDisplay"]
+margin_right = 146.0
+margin_bottom = 91.0
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource( 2 )
 
-[node name="Control" type="Control" parent="WorldInteractionControl/Popup/MarginContainer/PanelContainer"]
-margin_right = 179.0
-margin_bottom = 94.0
+[node name="Control" type="Control" parent="WorldInteractionControl/Popup/PopupDisplay/PanelContainer"]
+margin_right = 146.0
+margin_bottom = 91.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="WorldInteractionControl/Popup/MarginContainer"]
-margin_right = 179.0
-margin_bottom = 94.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="WorldInteractionControl/Popup/PopupDisplay"]
+margin_right = 146.0
+margin_bottom = 91.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 5
 alignment = 1
 
-[node name="Label" type="Label" parent="WorldInteractionControl/Popup/MarginContainer/VBoxContainer2"]
-margin_right = 179.0
+[node name="Label" type="Label" parent="WorldInteractionControl/Popup/PopupDisplay/VBoxContainer2"]
+margin_right = 146.0
 margin_bottom = 22.0
 grow_horizontal = 0
 custom_fonts/font = ExtResource( 4 )
@@ -490,27 +489,30 @@ text = "Interaction choice"
 align = 1
 valign = 2
 
-[node name="ChoiceContainer" type="VBoxContainer" parent="WorldInteractionControl/Popup/MarginContainer/VBoxContainer2"]
-margin_left = 89.0
-margin_top = 75.0
-margin_right = 89.0
-margin_bottom = 75.0
+[node name="ChoiceContainer" type="VBoxContainer" parent="WorldInteractionControl/Popup/PopupDisplay/VBoxContainer2"]
+margin_left = 73.0
+margin_top = 72.0
+margin_right = 73.0
+margin_bottom = 72.0
 rect_pivot_offset = Vector2( 76.687, 12 )
 size_flags_horizontal = 4
 size_flags_vertical = 10
 custom_constants/separation = 2
 alignment = 1
 
-[node name="Label2" type="Label" parent="WorldInteractionControl/Popup/MarginContainer/VBoxContainer2"]
-margin_top = 80.0
-margin_right = 179.0
-margin_bottom = 94.0
+[node name="Label2" type="Label" parent="WorldInteractionControl/Popup/PopupDisplay/VBoxContainer2"]
+margin_top = 77.0
+margin_right = 146.0
+margin_bottom = 91.0
 
 [node name="Camera2D2" type="Camera2D" parent="WorldInteractionControl"]
 position = Vector2( 7.65488, 20.0899 )
 scale = Vector2( 1.0406, -1.17813 )
-current = true
 zoom = Vector2( 0.3, 0.3 )
 
-[node name="Player" parent="WorldInteractionControl" instance=ExtResource( 5 )]
-position = Vector2( -55.4681, 20.4825 )
+[node name="PopupPanel" type="PopupPanel" parent="."]
+visible = true
+margin_right = 8.0
+margin_bottom = 8.0
+
+[node name="Sprite" type="Sprite" parent="."]

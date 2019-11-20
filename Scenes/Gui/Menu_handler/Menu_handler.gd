@@ -7,6 +7,8 @@ export var menu_filepath = ""  # What folder to load the menu scenes from
 #### MENU PACKEDSCENES
 export (PackedScene) var interaction_menu 
 
+signal menu_choice_made
+
 ##### TESTING VARIABLE
 export var testing = false
 export var t_print = true
@@ -24,6 +26,18 @@ func load_interaction_menu(pos, objects):
 		self.add_child(current_menu)
 		print(objects, "menu_handler")
 		current_menu.create_menu(pos, objects)
+		current_menu.connect("interaction_choice", self, "_on_interaction_choice")
+	
 		
-	
-	
+func _on_interaction_choice(type):
+	if t_print: print("##button presss signal recieved by menuhandler"); print(current_menu)
+	emit_signal("menu_choice_made", type)
+
+##
+# Used to create the click masking area 
+func get_current_menu_area():
+	return current_menu.get_area()
+
+func close_current_menu():
+	UTIL.remove_all_children(self)
+	current_menu = null

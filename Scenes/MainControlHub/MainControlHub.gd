@@ -23,7 +23,7 @@ func _ready():
 	
 	#### SIGNAL CONNECTIONS
 	#player.connect("player_map_call", self, "_on_player_map_call")
-
+	menu_handler.connect("menu_choice_made", self, "_on_menu_choice_made")
 
 
 
@@ -35,7 +35,9 @@ func _process(delta):
 	### INTERACTION CONTROLS
 	if Input.is_action_pressed("ui_mouse_left"):
 		if menu_open:
+			if t_print: print("menu on click")
 			var menu_area = menu_handler.get_current_menu_area()
+			if t_print: print(menu_area)
 			if mouse_pos.x in range(menu_area[0].x, menu_area[1].x):
 				if mouse_pos.y in range(menu_area[0].y, menu_area[1].y):
 					pass
@@ -43,6 +45,7 @@ func _process(delta):
 					menu_handler.close_current_menu()
 					player_map_call(mouse_pos)
 		else:
+			if t_print: print("no menu on click")
 			player_map_call(mouse_pos)
 
 			## MENU CONTROLS 
@@ -63,6 +66,12 @@ func _process(delta):
 ####HANDLES ALL SIGNALS FROM DIFFERENT OBJECTS
 
 ##
+# Called when the player makes a choice in their menu
+func _on_menu_choice_made(type, object):
+	if t_print: print("Choice_recieved: ", type, object)
+	menu_handler.close_current_menu()
+	menu_open = false
+##
 # Called whenever a player requests interaction information about a certain cell
 func player_map_call(pos):
 	if t_print: print("player_map_call")
@@ -71,3 +80,6 @@ func player_map_call(pos):
 	if t_print: print(cell_objects)
 	if cell_objects != null:
 		menu_handler.load_interaction_menu(pos, cell_objects)
+		menu_open = true
+
+

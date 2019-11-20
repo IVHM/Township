@@ -9,6 +9,7 @@
 [ext_resource path="res://Scenes/Gui/Menu_handler/Menu_handler.tscn" type="PackedScene" id=7]
 
 [node name="MainControlHub" type="Node2D"]
+position = Vector2( -0.4003, 0 )
 script = ExtResource( 1 )
 world_map = NodePath("Map")
 object_handler = NodePath("MapObjects_handler")
@@ -30,10 +31,17 @@ zoom = Vector2( 0.5, 0.5 )
 [node name="FrameInformationTimer" type="Timer" parent="."]
 autostart = true
 script = ExtResource( 5 )
-output_flags = 31
+output_flags = 27
 
 [node name="MapObjects_handler" parent="." instance=ExtResource( 6 )]
 
 [node name="Menu_handler" parent="." instance=ExtResource( 7 )]
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Node2D"]
+points = PoolVector2Array( 0, 0, 100, 0, 100, 100, 0, 100, 30.3778, 17.714 )
+width = 1.0
+texture_mode = 16393736
 [connection signal="player_map_call" from="Player" to="." method="_on_Player_player_map_call"]
 [connection signal="timeout" from="FrameInformationTimer" to="FrameInformationTimer" method="_on_FrameInformationTimer_timeout"]

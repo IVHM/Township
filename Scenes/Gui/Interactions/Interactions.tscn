@@ -1,10 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/Gui/Interactions/WorldInteractionMenu.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Gui/Interactions/InteractionButton.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Menu_icons/Buttons/panel_texture.png" type="Texture" id=3]
 [ext_resource path="res://Assets/fonts/label_font.tres" type="DynamicFont" id=4]
-[ext_resource path="res://Scenes/Objects/Player/Player.tscn" type="PackedScene" id=5]
 
 [sub_resource type="StyleBoxTexture" id=1]
 texture = ExtResource( 3 )
@@ -425,6 +424,9 @@ WindowDialog/styles/panel = null
 
 [node name="WorldInteractionMenu" type="Node2D"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 pop_up = NodePath("WorldInteractionControl/Popup")
 menu_label = NodePath("WorldInteractionControl/Popup/MarginContainer/VBoxContainer2/Label")
 choice_container = NodePath("WorldInteractionControl/Popup/MarginContainer/VBoxContainer2/ChoiceContainer")
@@ -432,10 +434,8 @@ interaction_btn = ExtResource( 2 )
 testing_choices = 110
 
 [node name="WorldInteractionControl" type="Control" parent="."]
-margin_left = 59.0
-margin_top = 2.0
-margin_right = 121.0
-margin_bottom = 42.0
+margin_right = 62.0
+margin_bottom = 40.0
 rect_pivot_offset = Vector2( 20, 20 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -509,6 +509,3 @@ margin_bottom = 94.0
 position = Vector2( 7.65488, 20.0899 )
 scale = Vector2( 1.0406, -1.17813 )
 zoom = Vector2( 0.3, 0.3 )
-
-[node name="Player" parent="WorldInteractionControl" instance=ExtResource( 5 )]
-position = Vector2( -55.4681, 20.4825 )

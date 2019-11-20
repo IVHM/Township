@@ -27,9 +27,10 @@ func _ready():
 		generate()
 																																																																																																	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
+func _process(delta):
+	if self.pressed:
+		emit_signal("interaction_button_pressed", button_type, owner_ref)
+		print("marco1?")
 ##
 # Sets the button_type based on an inputed string derived from the global var interaction types
 func initialize_button(button_type_in, object):
@@ -48,10 +49,4 @@ func generate():
 	icon.set_texture(load(icon_folder_path + button_type + ".png"))
 	icon_highlight.set_texture(load(icon_folder_path + button_type + ".png"))
 
-
-##
-#
-func _on_InteractionsButton_pressed():
-	emit_signal("interaction_button_pressed", button_type, owner_ref)
-	print("marco1?")
 
