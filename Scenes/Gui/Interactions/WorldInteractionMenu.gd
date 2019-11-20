@@ -57,7 +57,7 @@ func create_menu(pos, objects, cancel_button=false):
 	
 	for obj in objects:
 		var menu_bit_flag = GLOBALS.OBJECT_TYPES[obj.object_type]
-		# Cycle through interaction type bit flags and bitwise & them 
+		# Cycle through interaction type bit masks and bitwise & them with menu bit flag
 		for crnt_type in GLOBALS.INTERACTION_TYPES.keys():
 			if menu_bit_flag & GLOBALS.INTERACTION_TYPES[crnt_type] != 0:
 				create_button(crnt_type, obj)
@@ -75,18 +75,19 @@ func create_button(type, object):
 	crnt_buttons.append(interaction_btn.instance())
 	choice_container.add_child(crnt_buttons[-1])    
 	crnt_buttons[-1].initialize_button(type, object) 
-	crnt_buttons[-1].generate()
+	crnt_buttons[-1].generate()                          
 	crnt_buttons[-1].connect("interaction_button_pressed", 
-								self, "_on_choice_made")		
+								self, "_on_choice_made")
 
 
 ##
 # Either sends out a signal to the main hub with the button choice or closes the menu.
-func _on_choice_made(type, owner=null):
+func _on_choice_made(type, object):
 	if type != "Cancel":
 		print(type, owner, "button_pressed")
-		emit_signal("interaction_choice", type)
 		pop_up.hide()
+		emit_signal("interaction_choice", type, object)
+		
 	else:
 		pop_up.hide()
 		

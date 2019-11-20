@@ -6,6 +6,7 @@ export (NodePath) var object_handler
 export (NodePath) var menu_handler
 export (NodePath) var player
 
+
 var menu_open = false
 
 
@@ -29,27 +30,30 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	########
 	#### PLAYER INPUT CONTROLS
 	var mouse_pos = get_global_mouse_position()
 
 	### INTERACTION CONTROLS
-	if Input.is_action_pressed("ui_mouse_left"):
+	if Input.is_action_just_pressed("ui_mouse_left"):
 		if menu_open:
 			if t_print: print("menu on click")
 			var menu_area = menu_handler.get_current_menu_area()
-			if t_print: print(menu_area)
+			if t_print: print("menu_area: ", menu_area, "Mouse pos: ", mouse_pos)
 			if mouse_pos.x in range(menu_area[0].x, menu_area[1].x):
 				if mouse_pos.y in range(menu_area[0].y, menu_area[1].y):
 					pass
 				else:
 					menu_handler.close_current_menu()
+					menu_open = false
 					player_map_call(mouse_pos)
 		else:
 			if t_print: print("no menu on click")
 			player_map_call(mouse_pos)
+		
 
 			## MENU CONTROLS 
-	if Input.is_action_pressed("ui_open_player_inventory"):
+	if Input.is_action_just_pressed("ui_open_player_inventory"):
 		print("player open inventory")
 
 	## MOVEMENT CONTROLS
@@ -68,7 +72,7 @@ func _process(delta):
 ##
 # Called when the player makes a choice in their menu
 func _on_menu_choice_made(type, object):
-	if t_print: print("Choice_recieved: ", type, object)
+	if t_print: print("Main_hub recived choice : ", type, object)
 	menu_handler.close_current_menu()
 	menu_open = false
 ##

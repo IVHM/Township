@@ -29,9 +29,9 @@ func load_interaction_menu(pos, objects):
 		current_menu.connect("interaction_choice", self, "_on_interaction_choice")
 	
 		
-func _on_interaction_choice(type):
+func _on_interaction_choice(type, object):
 	if t_print: print("##button presss signal recieved by menuhandler"); print(current_menu)
-	emit_signal("menu_choice_made", type)
+	emit_signal("menu_choice_made", type, object)
 
 ##
 # Used to create the click masking area 
