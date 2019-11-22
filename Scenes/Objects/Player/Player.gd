@@ -20,7 +20,7 @@ export var anim = ["Idle", "Walking","Talking","Waving"]
 export var repeat_chance = .6
 export var personal_name = "Choose-name"
 export var health = 100
-export var inventory = {'gold': 100, 'wood': 100, 'stone': 50}
+export var inventory = {'nickle': 100, 'wood': 100, 'stone': 50}
 
 # INTERACTION VARIABLES
 signal player_path_request
@@ -172,14 +172,25 @@ func _on_MiningTimer_timeout():
 
 
 ##
-# Adds items to the player's inventory
-func transfer(inventory_in):
+# updates quantities and items in the player's inventory
+func update_inventory(inventory_in):
 	print("transfering", inventory_in)
 	for i in inventory_in:
 		if i in inventory.keys():
 			inventory[i] += inventory_in[i]
+			if inventory[i] == 0:
+				inventory.erase(i)
+			if inventory[i] < 0:
+				print("\n****\nERROR\n****")
+				print("player inventory was just updated with a negative number")
+				print("check your code bud")
 		else:
-			inventory[i] = inventory_in[i]
+			if inventory[i] <= 0:
+				print("\n****\nERROR\n****")
+				print("player inventory was just updated with a negative number")
+				print("check your code bud")
+			else:
+				inventory[i] = inventory_in[i]
 
 
 ##
@@ -207,3 +218,10 @@ func move_player(movement_vector, delta):
 # Returns the sprite's position for more acurate measurements
 func get_sprite_position():
 	return self.get_global_position()
+
+
+
+##
+# returns a copy of the contents of the players inventory
+func get_inventory():
+	return self.inventory.duplicate()
