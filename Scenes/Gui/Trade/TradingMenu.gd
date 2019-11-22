@@ -1,77 +1,119 @@
 extends Node2D
 
-# Controls the size and layout of the two inventory gridcontainers
+# Controls the size and layout of the two inventory GridContainers
+enum MenuModes {TOWNSFOLK, INVENTORY} # The different modes the trade menu works on
+export (MenuModes) var trade_mode 
 export var items_per_page = 12
-export var total_pages = 3
+export var total_pages = 1
 var num_player_pages = 1
-var num_townsfolk_pages = 1
+var num_trader_pages = 1
 var current_player_page = 0
-var current_townsfolk_page = 0
+var current_trader_page = 0
+
+signal trade_completed
+
+
+####INVENTORY VARIABLES####
+# PLAYER
+var player_ref = null  # A reference back to the player object
 var player_items = null  # A dictionary containing the name and quantity of items in the payers inventory
-var player_buttons = [] # An array to hold the different item buttons
+var player_buttons = [[]]  # An array to hold the different item buttons
 # The GridContainer that parents the buttons 
-export (PackedScene) onready var player_inventory = $PlayerTrade/PlayerItems/PlayerInventory
-export (PackedScene) onready var player_inventory_holding = $PlayerInventoryHolding
+export (NodePath) var player_inventory  # All the items being displayed on current page
+export (NodePath) var player_inventory_holding  # Used to hold the items that aren't being displayed
+var player_inventory_change = {}  # Dictionary to be sent back to payer for update
 
-var townsfolk_items = null
-var townsfolk_buttons = []
-export (PackedScene) onready var   = $TownsfolkTrade/TownsfolkItems/TownsfolkInventory
-export (PackedScene) onready var townsfolk_inventory_holding = $TownsfolkInventoryHolding
+# TRADER
+var trader_ref = null
+var trader_items = null
+var trader_buttons = [[]]
+export (NodePath) var  trader_inventory
+export (NodePath) var trader_inventory_holding 
+var trader_inventory_change = {}
+
+
 # Get the TradeItemButton Node
-onready var item_button = load("res://TESTS/Menu tests/TradeItemButton.tscn")
+export (String, FILE) var item_button
 
+signal trade_completed
 
 func _ready():
-	# Create the intial pages of buttons and pair the first page to displayed grid container
-	for x in range(total_pages):
-		player_buttons.append([])
-		townsfolk_buttons.append([])
-		for y in range(items_per_page):
-			player_buttons[x].append(item_button.instance())
-			townsfolk_buttons[x].append(item_button.instance())
-			if x == 0:
-				player_inventory.add_child(player_buttons[x][y])
-				townsfolk_inventory.add_child(townsfolk_buttons[x][y])
-			else:
-				player_inventory_holding.add_child(player_buttons[x][y])
-				townsfolk_inventory_holding.add_child(townsfolk_buttons[x][y])
+	print("is this loading?")
+	
 
-	
-	
+func intializes_references():
+	item_button = load(item_button)
+	print("item_button: ", item_button)
+	player_inventory = get_node(player_inventory)
+	player_inventory_holding = get_node(player_inventory_holding)
+	trader_inventory = get_node(trader_inventory)
+	player_inventory_holding = get_node(trader_inventory_holding)
 ##
-# loads in a new
-func load_items(player_items_IN, townsfolk_items_IN):
+# Loads in inventories in the form of {"Item_name": item_amt,...}
+# and creates new buttons for each item in the inventory
+func load_items(player_items_IN, player_ref, trader_items_IN, trader_ref):
+	intializes_references()
+	var tot = 0 # used to see if we've gone over the main page limit
+	# load in the necessary inventory data
 	self.player_items = player_items_IN
-	self.townsfolk_items = townsfolk_items_IN
-	create_buttons()
+	self.player_ref = player_ref
+	
+	for item in player_items.keys():
+		# Check if we've reached the page limit
+		if tot > self.items_per_page:
+			num_player_pages += 1  # Increases the number of pages
+			player_buttons.append([]) # And adds a new column for the page
+			tot = 0
+		
+		# Add a new button to the current column and initialize it
+		player_buttons[-1].append(item_button.instance())
+		
+		# We're on the first page of buttons parent them to the display,
+		# else add them to the holding pen
+		if num_player_pages == 1:
+			player_inventory.add_child(player_buttons[-1][-1])
+		else:
+			player_inventory_holding.add_child(player_buttons[-1][-1])
+
+		player_buttons[-1][-1].initialize_button("p", item, player_items[item])
+		player_buttons[-1][-1].connect("quantity_changed", self, "_on_quantity_changed")			
+		
+		tot += 1 # Increment the item counter
+
+	tot = 0
+	self.trader_items = trader_items_IN
+	self.trader_ref = trader_ref
+	for item in trader_items.keys():
+		# Check if we've reached the page limit
+		if tot > self.items_per_page:
+			num_trader_pages += 1
+			trader_buttons.append([])
+
+		trader_buttons[-1].append(item_button.instance())
+		if num_trader_pages == 1:
+			trader_inventory.add_child(trader_buttons[-1][-1])
+		else:
+			trader_inventory_holding.add_child(trader_buttons[-1][-1])
+		trader_buttons[-1][-1].initialize_button("t", item, trader_items[item])
+		trader_buttons[-1][-1].connect("quantity_changed", self, "_on_quantity_changed")
+		tot += 1
+
 
 
 ##
-#
-func create_buttons():
-	var ix = Vector2(0,0)
-	for i in self.player_items:
-
-		print(ix.x, ix.y)		
-		player_buttons[ix.x][ix.y].initialize_button(ix, i, self.player_items[i])
-		ix.y += 1
-		if ix.y == items_per_page:
-			self.num_player_pages += 1
-			ix.x += 1
-			ix.y = 0
-			
-	print(self.num_player_pages)
-
-	ix = Vector2(0,0)
-	for i in self.townsfolk_items:
-		townsfolk_buttons[ix.x][ix.y].initialize_button(len(player_buttons), i, self.townsfolk_items[i])
-		ix.y += 1
-		if ix.y == items_per_page:
-			self.num_townsfolk_pages += 1
-			ix.x += 1
-			ix.y = 0
-
-
+# Updates changes to inventory
+func _on_quantity_changed(id, item, quantity):
+	if id == "p":
+		if item in player_inventory_change.keys():
+			player_inventory_change[item] += quantity
+		else:
+			player_inventory_change[item] = quantity
+	
+	if id == "t":
+		if item in player_inventory_change.keys():
+			player_inventory_change[item] += quantity
+		else:
+			player_inventory_change[item] = quantity
 ##
 #
 func _on_CancelTrade_pressed():
@@ -83,23 +125,22 @@ func add_buttons():
 
 ##
 #
-func clear_buttons(player=true, townsfolk=true):
+func clear_buttons(player=true, trader=true):
 	if player:
 		for i in range(self.num_player_pages):
 			for btn in player_buttons[i]:
 				btn.reset_button()
 
-	if townsfolk:
-		print(townsfolk_buttons)
-		for i in range(self.num_townsfolk_pages):
-			for btn in townsfolk_buttons[i]:
+	if trader:
+		print(trader_buttons)
+		for i in range(self.num_trader_pages):
+			for btn in trader_buttons[i]:
 				btn.reset_button()
 
 
 ##
 #
 func switch_page(agent):
-
 	if agent == "p":
 		for btn in self.player_inventory.get_children():
 			self.player_inventory.remove_child(btn)
@@ -109,12 +150,10 @@ func switch_page(agent):
 			self.player_inventory.add_child(btn)
 	
 	if agent == 't':
-		for btn in self.townsfolk_inventory.get_children():  # Remove old buttons
-			self.townsfolk_inventory.remove_child(btn)
-		for btn in townsfolk_buttons[self.current_townsfolk_page]:  # Add new buttons
-			self.townsfolk_inventory.add_child(btn)
-
-
+		for btn in self.trader_inventory.get_children():  # Remove old buttons
+			self.trader_inventory.remove_child(btn)
+		for btn in trader_buttons[self.current_trader_page]:  # Add new buttons
+			self.trader_inventory.add_child(btn)
 
 
 ##
@@ -129,7 +168,6 @@ func _on_PlayerTradePrevPage_pressed():
 		
 		switch_page("p")
 
-
 func _on_PlayerTradeNextPage_pressed():
 	var prev_page = self.current_player_page
 	if self.num_player_pages > 1:
@@ -140,26 +178,23 @@ func _on_PlayerTradeNextPage_pressed():
 		
 		switch_page("p")
 
-
-func _on_TownsfolkTradeNextPage_pressed():
-	var prev_page = self.current_townsfolk_page
-	if self.num_townsfolk_pages > 1:
-		if self.current_townsfolk_page == (self.num_townsfolk_pages - 1):
-			self.current_townsfolk_page = 0
+func _on_traderTradeNextPage_pressed():
+	var prev_page = self.current_trader_page
+	if self.num_trader_pages > 1:
+		if self.current_trader_page == (self.num_trader_pages - 1):
+			self.current_trader_page = 0
 		else:
-			self.current_townsfolk_page += 1
+			self.current_trader_page += 1
 		
 		switch_page("p")
 
-
-
-func _on_TownsfolkTradePrevPage_pressed():
-	var prev_page = self.current_townsfolk_page
-	if self.num_townsfolk_pages > 1:
-		if self.current_townsfolk_page == 0:
-			self.current_townsfolk_page = self.num_townsfolk_pages
+func _on_traderTradePrevPage_pressed():
+	var prev_page = self.current_trader_page
+	if self.num_trader_pages > 1:
+		if self.current_trader_page == 0:
+			self.current_trader_page = self.num_trader_pages
 		else:
-			self.current_townsfolk_page -= 1
+			self.current_trader_page -= 1
 		
 		switch_page("p")
 

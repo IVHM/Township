@@ -16,21 +16,23 @@
 [ext_resource path="res://Assets/Menu_icons/Items/wheat.png" type="Texture" id=14]
 [ext_resource path="res://Assets/Menu_icons/Items/wood.png" type="Texture" id=15]
 
-
 [node name="TradingMenu" type="Node2D"]
 position = Vector2( 2.35936, 2.74676 )
 scale = Vector2( 0.8, 0.8 )
 script = ExtResource( 1 )
+player_inventory = NodePath("PlayerTrade/PlayerItems/PlayerInventory")
+player_inventory_holding = NodePath("PlayerInventoryHolding")
+trader_inventory = NodePath("TownsfolkTrade/TownsfolkItems/TownsfolkInventory")
+trader_inventory_holding = NodePath("TownsfolkInventoryHolding")
+item_button = "res://Scenes/Gui/Trade/TradeItemButton.tscn"
 
 [node name="TradeControls" type="PanelContainer" parent="."]
-editor/display_folded = true
 margin_left = -62.126
 margin_top = 32.9863
 margin_right = 71.874
 margin_bottom = 84.9863
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TradeControls"]
-editor/display_folded = true
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 127.0
@@ -47,16 +49,16 @@ margin_right = 120.0
 margin_bottom = 38.0
 size_flags_vertical = 3
 
-[node name="ConfirmTrade" type="Button" parent="TradeControls/VBoxContainer/TradingMenu"]
-margin_right = 62.0
-margin_bottom = 20.0
-text = "Confirm"
-
 [node name="CancelTrade" type="Button" parent="TradeControls/VBoxContainer/TradingMenu"]
-margin_left = 66.0
-margin_right = 120.0
+margin_right = 54.0
 margin_bottom = 20.0
 text = "Cancel"
+
+[node name="ConfirmTrade" type="Button" parent="TradeControls/VBoxContainer/TradingMenu"]
+margin_left = 58.0
+margin_right = 120.0
+margin_bottom = 20.0
+text = "Confirm"
 
 [node name="PlayerTrade" type="VBoxContainer" parent="."]
 margin_left = 83.5349
@@ -156,6 +158,7 @@ text = ">>"
 
 [node name="IconPreviewPanel" type="VBoxContainer" parent="."]
 editor/display_folded = true
+visible = false
 margin_left = 364.0
 margin_top = 86.0
 margin_right = 502.0

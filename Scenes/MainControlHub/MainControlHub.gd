@@ -40,16 +40,16 @@ func _process(delta):
 			if t_print: print("menu on click")
 			var menu_area = menu_handler.get_current_menu_area()
 			if t_print: print("menu_area: ", menu_area, "Mouse pos: ", mouse_pos)
-			if mouse_pos.x in range(menu_area[0].x, menu_area[1].x):
-				if mouse_pos.y in range(menu_area[0].y, menu_area[1].y):
+			if mouse_pos.x >= menu_area[0].x &&  mouse_pos.x <= menu_area[1].x:
+				if mouse_pos.y >= menu_area[0].y && mouse_pos.y <= menu_area[1].y:
 					pass
 				else:
 					menu_handler.close_current_menu()
 					menu_open = false
-					player_map_call(mouse_pos)
+					player_map_interaction(mouse_pos)
 		else:
 			if t_print: print("no menu on click")
-			player_map_call(mouse_pos)
+			player_map_interaction(mouse_pos)
 		
 
 			## MENU CONTROLS 
@@ -71,19 +71,25 @@ func _process(delta):
 
 ##
 # Called when the player makes a choice in their menu
-func _on_menu_choice_made(type, object):
-	if t_print: print("Main_hub recived choice : ", type, object)
+func _on_menu_choice_made(player_action, object):
+	if t_print: print("Main_hub recived choice: ", player_action, object)
 	menu_handler.close_current_menu()
 	menu_open = false
+	
+	if player_action == "Open":
+		print("opening container")
+		menu_handler.load_inventory_trade_menu(player, object)
+
 ##
 # Called whenever a player requests interaction information about a certain cell
-func player_map_call(pos):
+func player_map_interaction(pos):
 	if t_print: print("player_map_call")
-	var cell_type = world_map.get_cell_info(pos)
-	var cell_objects = object_handler.check_cell(pos, null, true)
-	if t_print: print(cell_objects)
-	if cell_objects != null:
-		menu_handler.load_interaction_menu(pos, cell_objects)
-		menu_open = true
+	if pos.x > 0 && pos.y > 0: 
+		var cell_type = world_map.get_cell_info(pos)
+		var cell_objects = object_handler.check_cell(pos, null, true)
+		if t_print: print(cell_objects)
+		if cell_objects != null:
+			menu_handler.load_interaction_menu(pos, cell_objects)
+			menu_open = true
 
 

@@ -7,7 +7,6 @@
 [ext_resource path="res://Scenes/Gui/Trade/SliderAmount.gd" type="Script" id=5]
 [ext_resource path="res://Assets/Menu_icons/checkmark.png" type="Texture" id=6]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 20
 font_data = ExtResource( 4 )
@@ -17,6 +16,9 @@ margin_right = 12.0
 margin_bottom = 20.0
 icon = ExtResource( 1 )
 script = ExtResource( 2 )
+quantity_label_path = NodePath("Quantity")
+quantity_controls_path = NodePath("QuantityControls")
+slider = NodePath("QuantityControls/VBoxContainer/HSlider")
 
 [node name="Quantity" type="Label" parent="."]
 margin_left = 14.1355
