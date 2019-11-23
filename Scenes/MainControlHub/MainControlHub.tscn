@@ -1,16 +1,21 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scenes/MainControlHub/MainControlHub.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Map/Map.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Objects/Player/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Objects/SmartCamera/MainCamera.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/MainControlHub/FrameInformationTimer.gd" type="Script" id=5]
-
+[ext_resource path="res://Scenes/Objects/MapObjects/MapObjects_handler.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Scenes/Gui/Menu_handler/Menu_handler.tscn" type="PackedScene" id=7]
 
 [node name="MainControlHub" type="Node2D"]
+position = Vector2( -0.4003, 0 )
 script = ExtResource( 1 )
 world_map = NodePath("Map")
+object_handler = NodePath("MapObjects_handler")
+menu_handler = NodePath("Menu_handler")
 player = NodePath("Player")
+t_print = true
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 size = Vector2( 64, 64 )
@@ -21,11 +26,21 @@ position = Vector2( 1.02667, -2.05337 )
 [node name="MainCamera" parent="Player" instance=ExtResource( 4 )]
 anchor_mode = 1
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 0.3, 0.3 )
 
 [node name="FrameInformationTimer" type="Timer" parent="."]
 autostart = true
 script = ExtResource( 5 )
-output_flags = 31
-[connection signal="player_map_call" from="Player" to="." method="_on_Player_player_map_call"]
+output_flags = 27
+
+[node name="MapObjects_handler" parent="." instance=ExtResource( 6 )]
+
+[node name="Menu_handler" parent="." instance=ExtResource( 7 )]
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Line2D" type="Line2D" parent="Node2D"]
+points = PoolVector2Array( 0, 0, 100, 0, 100, 100, 0, 100, 0, 0 )
+width = 1.0
+texture_mode = 16393736
 [connection signal="timeout" from="FrameInformationTimer" to="FrameInformationTimer" method="_on_FrameInformationTimer_timeout"]

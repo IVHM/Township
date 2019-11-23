@@ -2,7 +2,7 @@ extends Node2D
 
 
 # OBJECT IMPORT VARIABLES 
-export var objects_filepath  = "null"
+export (String, DIR) var objects_filepath  = "null"
 
 var object_lookup = {}  # Associates a key with a given activated node ie {"barrels": BarrelNode}
 
@@ -22,11 +22,11 @@ var test_ID = UTIL.map_pos_to_id(test_position)
 ##
 # First call intializations
 func _ready():
-	
 	if t_print: print("OBJECTHANDLER INTIALIZED ##################")
 
-	for i in GLOBALS.OBJECT_TYPES:
+	for i in GLOBALS.OBJECTS_DATABASE:
 		object_lookup[i] = load(objects_filepath + i + ".tscn")
+		print(object_lookup)
 		
 
 	# TESTING
@@ -52,7 +52,7 @@ func create_item(item, pos, owner):
 	
 	# Then setup the parameters of the node and intialize the object
 	world_objects_database[new_id][cell_pos].set_position(pos)
-	world_objects_database[new_id][cell_pos].set_astar_id(new_id)
+	world_objects_database[new_id][cell_pos].set_cell_id(new_id)
 	world_objects_database[new_id][cell_pos].set_cell_pos(cell_pos)
 	# Before parenting to handler for display
 	self.add_child(world_objects_database[new_id][cell_pos])
@@ -60,25 +60,26 @@ func create_item(item, pos, owner):
 
 ##
 # Moves an existing item returns false if illeagal move
-func move_item(item, cell_id, cell_pos, new_pos):
-	pass
+func move_item(item, cell_id, cell_pos, new_pos):##### TO DO ######
+		pass
 
 
 ##
 # Returns the contents of a specific cell
 func check_cell(i, j=null, world_pos=false):
+	var cell_id = null
 	if j == null:
 		j = i.y
 		i = i.x
 	if world_pos:
-		var cell_id = UTIL.world_pos_to_id(i,j)
+		cell_id = UTIL.world_pos_to_id(i,j)
 	else:
-		var cell_id = UTIL.map_pos_to_id(i,j)
+		cell_id = UTIL.map_pos_to_id(i,j)
 	
 	if cell_id in world_objects_database.keys():
 		return world_objects_database[cell_id]
 	else:
-		return false
+		return null
 
 
 

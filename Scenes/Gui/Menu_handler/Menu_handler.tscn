@@ -2,6 +2,7 @@
 
 [ext_resource path="res://Scenes/Gui/Menu_handler/Menu_handler.gd" type="Script" id=1]
 
-
 [node name="Menu_handler" type="Node"]
 script = ExtResource( 1 )
+InteractionMenu = "res://Scenes/Gui/Interactions/WorldInteractionMenu.tscn"
+TradingMenu = "res://Scenes/Gui/Trade/TradingMenu.tscn"

@@ -21,13 +21,12 @@ export var INTERACTION_TYPES = {
 			"Move"  : 4096, 
 			"Give"  : 8192} 
 
-
 # All the different menu types the menu handler can generate
 export var MENU_TYPES = ["Interactions"]
-# All the different objects that can be generated on the game map						   
-export var OBJECT_TYPES = ["Barrel"]
-# The different bitflags for the each objects interactions
-export var object_interaction_bitflags = {
+
+# All the different objects classes that can be generated on the game map
+# Along with the bitflags for their interaction menu buttons						   
+export var OBJECT_TYPES= {
 			"Agent"    : 10247,
 			"Stone"    : 1040,
 			"Container": 4288,
@@ -37,7 +36,9 @@ export var object_interaction_bitflags = {
 			"Furniture": 5184,
 			"Grass"    : 1280}
 
-}
+export var OBJECTS_DATABASE = [
+			"Barrel"
+]
 #### MAP VARIABLES
 
 export var MAP_SIZE = Vector2(30,30)

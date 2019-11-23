@@ -17,7 +17,7 @@ var tile_id_name_lookup = []
 var first_run = true
 var second_run = false
 
-# Used to control the placement and conection of road tiles
+# Used to control the placement and connnectionnn of road tiles
 export var road_tile_truth_table = [4, 64, 33, 131, 66, 16, 129, 514,        # Mapped to a binary value based on nieghbor's cardinal placement 
 								    32, 130, 8, 256, 128, 513, 258, 1024]  # see included spreead sheet(townsfolk_roads_truth_table.ods) 
 export (Array) var road_tile_cypher = ["i1", "s2", "s1", "d2", "d1", "c1", "t2", "t1", "j1"]  # Use index 
@@ -130,7 +130,7 @@ func generate_blank_map():
 
 
 ##
-# Creates the lookup table for astar points 
+# Updates the lookup table for astar points 
 func update_astar(i,j):
 	# Here we intialize the info for the astar id to cell lookup
 	var tile_name = tile_id_name_lookup[world_tilemap.get_cell(i,j)].rsplit('_')

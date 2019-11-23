@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://GLOBALS.gd" type="Script" id=1]
+
+[node name="GLOBALS_EDITOR" type="Node"]
+
+[node name="GLOBALS" type="Node" parent="."]
+script = ExtResource( 1 )
+INTERACTION_TYPES = {
+"Cancel": 16,
+"Chop": 64,
+"Job": 8,
+"Mine": 32,
+"Null": 1,
+"Open": 128,
+"Place": 356,
+"Talk": 2,
+"Trade": 4
+}
+OBJECT_TYPES = [ "Barrel", "BEES" ]
+
+[node name="UTILS" type="Node" parent="."]
+
+[node name="Node3" type="Node" parent="."]
