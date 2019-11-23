@@ -506,13 +506,9 @@ margin_right = 146.0
 margin_bottom = 91.0
 
 [node name="Camera2D2" type="Camera2D" parent="WorldInteractionControl"]
+visible = false
 position = Vector2( 7.65488, 20.0899 )
 scale = Vector2( 1.0406, -1.17813 )
 zoom = Vector2( 0.3, 0.3 )
-
-[node name="PopupPanel" type="PopupPanel" parent="."]
-visible = true
-margin_right = 8.0
-margin_bottom = 8.0
 
 [node name="Sprite" type="Sprite" parent="."]

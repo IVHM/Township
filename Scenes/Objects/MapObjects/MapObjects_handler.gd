@@ -61,7 +61,7 @@ func create_item(item, pos, owner):
 ##
 # Moves an existing item returns false if illeagal move
 func move_item(item, cell_id, cell_pos, new_pos):##### TO DO ######
-	pass
+		pass
 
 
 ##

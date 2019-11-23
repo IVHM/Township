@@ -56,6 +56,7 @@ func create_menu(pos, objects, cancel_button=false):
 	pop_up.set_position(pos)
 	
 	for obj in objects:
+		print(obj,":", obj.object_type)
 		var menu_bit_flag = GLOBALS.OBJECT_TYPES[obj.object_type]
 		# Cycle through interaction type bit masks and bitwise & them with menu bit flag
 		for crnt_type in GLOBALS.INTERACTION_TYPES.keys():
@@ -94,4 +95,5 @@ func _on_choice_made(type, object):
 
 
 func get_area():
-	return [self.get_global_position(), pop_up_control.get_size()]
+	return [pop_up.get_global_position(),
+			pop_up.get_global_position() + (pop_up_control.get_size() * pop_up_control.get_scale())]
