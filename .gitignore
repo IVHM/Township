@@ -24,3 +24,5 @@ Gui/Interactions/InteractionsButton.tscn
 TESTS/Kinematic_body_tests/
 
 Legacy/
+
+Scenes/Gui/Menu_handler/cross_exam_mainhub_to_interact_menu
