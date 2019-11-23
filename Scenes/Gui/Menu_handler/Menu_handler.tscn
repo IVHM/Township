@@ -4,5 +4,5 @@
 
 [node name="Menu_handler" type="Node"]
 script = ExtResource( 1 )
-interaction_menu = "res://Scenes/Gui/Interactions/WorldInteractionMenu.tscn"
-trading_menu = "res://Scenes/Gui/Trade/TradingMenu.tscn"
+InteractionMenu = "res://Scenes/Gui/Interactions/WorldInteractionMenu.tscn"
+TradingMenu = "res://Scenes/Gui/Trade/TradingMenu.tscn"

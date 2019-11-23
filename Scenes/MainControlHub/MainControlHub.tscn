@@ -43,5 +43,4 @@ output_flags = 27
 points = PoolVector2Array( 0, 0, 100, 0, 100, 100, 0, 100, 0, 0 )
 width = 1.0
 texture_mode = 16393736
-[connection signal="player_map_call" from="Player" to="." method="_on_Player_player_map_call"]
 [connection signal="timeout" from="FrameInformationTimer" to="FrameInformationTimer" method="_on_FrameInformationTimer_timeout"]

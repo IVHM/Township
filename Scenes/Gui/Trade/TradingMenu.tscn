@@ -18,138 +18,149 @@
 
 [node name="TradingMenu" type="Node2D"]
 position = Vector2( 2.35936, 2.74676 )
-scale = Vector2( 0.8, 0.8 )
+scale = Vector2( 0.5, 0.5 )
 script = ExtResource( 1 )
-player_inventory = NodePath("PlayerTrade/PlayerItems/PlayerInventory")
-player_inventory_holding = NodePath("PlayerInventoryHolding")
-trader_inventory = NodePath("TownsfolkTrade/TownsfolkItems/TownsfolkInventory")
-trader_inventory_holding = NodePath("TownsfolkInventoryHolding")
+PlayerInventory = NodePath("ReferenceRect/PlayerTrade/PlayerItems/PlayerInventory")
+PlayerInventory_holding = NodePath("PlayerInventoryHolding")
+TraderNameLabel = NodePath("ReferenceRect/TownsfolkTrade/PanelContainer/Label")
+TraderInventory = NodePath("ReferenceRect/TownsfolkTrade/TownsfolkItems/TownsfolkInventory")
+TraderInventory_holding = NodePath("TownsfolkInventoryHolding")
 item_button = "res://Scenes/Gui/Trade/TradeItemButton.tscn"
 
-[node name="TradeControls" type="PanelContainer" parent="."]
-margin_left = -62.126
-margin_top = 32.9863
-margin_right = 71.874
-margin_bottom = 84.9863
+[node name="Container" type="Container" parent="."]
+margin_left = -215.0
+margin_top = -29.0
+margin_right = 224.0
+margin_bottom = 97.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TradeControls"]
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+margin_left = -216.0
+margin_top = -27.6919
+margin_right = 226.0
+margin_bottom = 98.3081
+
+[node name="TradeControls" type="PanelContainer" parent="ReferenceRect"]
+margin_left = 153.874
+margin_top = 71.9863
+margin_right = 287.874
+margin_bottom = 123.986
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReferenceRect/TradeControls"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 127.0
 margin_bottom = 45.0
 
-[node name="Label" type="Label" parent="TradeControls/VBoxContainer"]
+[node name="Label" type="Label" parent="ReferenceRect/TradeControls/VBoxContainer"]
 margin_right = 120.0
 margin_bottom = 14.0
 text = "Options"
 
-[node name="TradingMenu" type="HBoxContainer" parent="TradeControls/VBoxContainer"]
+[node name="TradingMenu" type="HBoxContainer" parent="ReferenceRect/TradeControls/VBoxContainer"]
 margin_top = 18.0
 margin_right = 120.0
 margin_bottom = 38.0
 size_flags_vertical = 3
 
-[node name="CancelTrade" type="Button" parent="TradeControls/VBoxContainer/TradingMenu"]
+[node name="CancelTrade" type="Button" parent="ReferenceRect/TradeControls/VBoxContainer/TradingMenu"]
 margin_right = 54.0
 margin_bottom = 20.0
 text = "Cancel"
 
-[node name="ConfirmTrade" type="Button" parent="TradeControls/VBoxContainer/TradingMenu"]
+[node name="ConfirmTrade" type="Button" parent="ReferenceRect/TradeControls/VBoxContainer/TradingMenu"]
 margin_left = 58.0
 margin_right = 120.0
 margin_bottom = 20.0
 text = "Confirm"
 
-[node name="PlayerTrade" type="VBoxContainer" parent="."]
-margin_left = 83.5349
-margin_top = -35.2728
-margin_right = 221.535
-margin_bottom = 84.7272
-
-[node name="PanelContainer" type="PanelContainer" parent="PlayerTrade"]
+[node name="PlayerTrade" type="VBoxContainer" parent="ReferenceRect"]
 editor/display_folded = true
-margin_right = 138.0
+margin_left = 299.535
+margin_top = 3.7272
+margin_right = 419.535
+margin_bottom = 73.7272
+
+[node name="PanelContainer" type="PanelContainer" parent="ReferenceRect/PlayerTrade"]
+editor/display_folded = true
+margin_right = 120.0
 margin_bottom = 28.0
 
-[node name="Label" type="Label" parent="PlayerTrade/PanelContainer"]
+[node name="Label" type="Label" parent="ReferenceRect/PlayerTrade/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 131.0
+margin_right = 113.0
 margin_bottom = 21.0
 text = "Player"
 
-[node name="PlayerItems" type="PanelContainer" parent="PlayerTrade"]
+[node name="PlayerItems" type="PanelContainer" parent="ReferenceRect/PlayerTrade"]
 margin_top = 32.0
-margin_right = 138.0
+margin_right = 120.0
 margin_bottom = 46.0
 
-[node name="PlayerInventory" type="GridContainer" parent="PlayerTrade/PlayerItems"]
+[node name="PlayerInventory" type="GridContainer" parent="ReferenceRect/PlayerTrade/PlayerItems"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 131.0
+margin_right = 113.0
 margin_bottom = 7.0
 columns = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerTrade"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ReferenceRect/PlayerTrade"]
 margin_top = 50.0
-margin_right = 138.0
+margin_right = 120.0
 margin_bottom = 70.0
 
-[node name="PlayerTradePrevPage" type="Button" parent="PlayerTrade/HBoxContainer"]
+[node name="PlayerTradePrevPage" type="Button" parent="ReferenceRect/PlayerTrade/HBoxContainer"]
 margin_right = 28.0
 margin_bottom = 20.0
 text = "<<"
 
-[node name="PlayerTradeNextPage" type="Button" parent="PlayerTrade/HBoxContainer"]
-margin_left = 110.0
-margin_right = 138.0
+[node name="PlayerTradeNextPage" type="Button" parent="ReferenceRect/PlayerTrade/HBoxContainer"]
+margin_left = 92.0
+margin_right = 120.0
 margin_bottom = 20.0
 size_flags_horizontal = 10
 text = ">>"
 
-[node name="TownsfolkTrade" type="VBoxContainer" parent="."]
-editor/display_folded = true
-margin_left = -215.16
-margin_top = -36.7867
-margin_right = -77.16
-margin_bottom = 83.2133
+[node name="TownsfolkTrade" type="VBoxContainer" parent="ReferenceRect"]
+margin_left = 0.839996
+margin_top = 2.2133
+margin_right = 138.84
+margin_bottom = 122.213
 
-[node name="PanelContainer" type="PanelContainer" parent="TownsfolkTrade"]
-editor/display_folded = true
+[node name="PanelContainer" type="PanelContainer" parent="ReferenceRect/TownsfolkTrade"]
 margin_right = 138.0
 margin_bottom = 28.0
 
-[node name="Label" type="Label" parent="TownsfolkTrade/PanelContainer"]
+[node name="Label" type="Label" parent="ReferenceRect/TownsfolkTrade/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 131.0
 margin_bottom = 21.0
 text = "TownsFolk"
 
-[node name="TownsfolkItems" type="PanelContainer" parent="TownsfolkTrade"]
-editor/display_folded = true
+[node name="TownsfolkItems" type="PanelContainer" parent="ReferenceRect/TownsfolkTrade"]
 margin_top = 32.0
 margin_right = 138.0
 margin_bottom = 46.0
 
-[node name="TownsfolkInventory" type="GridContainer" parent="TownsfolkTrade/TownsfolkItems"]
+[node name="TownsfolkInventory" type="GridContainer" parent="ReferenceRect/TownsfolkTrade/TownsfolkItems"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 131.0
 margin_bottom = 7.0
 columns = 4
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TownsfolkTrade"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ReferenceRect/TownsfolkTrade"]
 margin_top = 50.0
 margin_right = 138.0
 margin_bottom = 70.0
 
-[node name="TownsfolkTradePrevPage" type="Button" parent="TownsfolkTrade/HBoxContainer2"]
+[node name="TownsfolkTradePrevPage" type="Button" parent="ReferenceRect/TownsfolkTrade/HBoxContainer2"]
 margin_right = 28.0
 margin_bottom = 20.0
 text = "<<"
 
-[node name="TownsfolkTradeNextPage" type="Button" parent="TownsfolkTrade/HBoxContainer2"]
+[node name="TownsfolkTradeNextPage" type="Button" parent="ReferenceRect/TownsfolkTrade/HBoxContainer2"]
 margin_left = 110.0
 margin_right = 138.0
 margin_bottom = 20.0
@@ -158,11 +169,10 @@ text = ">>"
 
 [node name="IconPreviewPanel" type="VBoxContainer" parent="."]
 editor/display_folded = true
-visible = false
 margin_left = 364.0
-margin_top = 86.0
-margin_right = 502.0
-margin_bottom = 256.0
+margin_top = 97.3081
+margin_right = 508.0
+margin_bottom = 273.308
 rect_scale = Vector2( 1.36433, 1.38472 )
 
 [node name="PanelContainer" type="PanelContainer" parent="IconPreviewPanel"]
@@ -317,10 +327,11 @@ margin_left = -305.469
 margin_top = 92.2998
 margin_right = -265.469
 margin_bottom = 132.3
-[connection signal="pressed" from="TradeControls/VBoxContainer/TradingMenu/CancelTrade" to="." method="_on_CancelTrade_pressed"]
-[connection signal="pressed" from="PlayerTrade/HBoxContainer/PlayerTradePrevPage" to="." method="_on_PlayerTradePrevPage_pressed"]
-[connection signal="pressed" from="PlayerTrade/HBoxContainer/PlayerTradeNextPage" to="." method="_on_PlayerTradeNextPage_pressed"]
-[connection signal="pressed" from="TownsfolkTrade/HBoxContainer2/TownsfolkTradePrevPage" to="." method="_on_TownsfolkTradePrevPage_pressed"]
-[connection signal="pressed" from="TownsfolkTrade/HBoxContainer2/TownsfolkTradeNextPage" to="." method="_on_TownsfolkTradeNextPage_pressed"]
+[connection signal="pressed" from="ReferenceRect/TradeControls/VBoxContainer/TradingMenu/CancelTrade" to="." method="_on_CancelTrade_pressed"]
+[connection signal="pressed" from="ReferenceRect/TradeControls/VBoxContainer/TradingMenu/ConfirmTrade" to="." method="_on_ConfirmTrade_pressed"]
+[connection signal="pressed" from="ReferenceRect/PlayerTrade/HBoxContainer/PlayerTradePrevPage" to="." method="_on_PlayerTradePrevPage_pressed"]
+[connection signal="pressed" from="ReferenceRect/PlayerTrade/HBoxContainer/PlayerTradeNextPage" to="." method="_on_PlayerTradeNextPage_pressed"]
+[connection signal="pressed" from="ReferenceRect/TownsfolkTrade/HBoxContainer2/TownsfolkTradePrevPage" to="." method="_on_TownsfolkTradePrevPage_pressed"]
+[connection signal="pressed" from="ReferenceRect/TownsfolkTrade/HBoxContainer2/TownsfolkTradeNextPage" to="." method="_on_TownsfolkTradeNextPage_pressed"]
 [connection signal="pressed" from="IconPreviewPanel/HBoxContainer/PlayerTradePrevPage" to="." method="_on_PlayerTradePrevPage_pressed"]
 [connection signal="pressed" from="IconPreviewPanel/HBoxContainer/PlayerTradeNextPage" to="." method="_on_PlayerTradeNextPage_pressed"]

@@ -6,8 +6,9 @@ export (NodePath) var object_handler
 export (NodePath) var menu_handler
 export (NodePath) var player
 
-
+# Menu state variables
 var menu_open = false
+var menu_type = null
 
 
 #### TESTING VARIABLES
@@ -24,8 +25,9 @@ func _ready():
 	
 	#### SIGNAL CONNECTIONS
 	#player.connect("player_map_call", self, "_on_player_map_call")
-	menu_handler.connect("menu_choice_made", self, "_on_menu_choice_made")
-
+	EVENTS.connect("menu_choice_made", self, "_on_menu_choice_made")
+	EVENTS.connect("menu_closed", self, "_on_menu_closed")
+	EVENTS.connect("trade_completed", self, "_on_trade_completed")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -38,15 +40,16 @@ func _process(delta):
 	if Input.is_action_just_pressed("ui_mouse_left"):
 		if menu_open:
 			if t_print: print("menu on click")
-			var menu_area = menu_handler.get_current_menu_area()
-			if t_print: print("menu_area: ", menu_area, "Mouse pos: ", mouse_pos)
-			if mouse_pos.x >= menu_area[0].x &&  mouse_pos.x <= menu_area[1].x:
-				if mouse_pos.y >= menu_area[0].y && mouse_pos.y <= menu_area[1].y:
-					pass
-				else:
-					menu_handler.close_current_menu()
-					menu_open = false
-					player_map_interaction(mouse_pos)
+			if menu_type != "Trade":
+				var menu_area = menu_handler.get_current_menu_area()
+				if t_print: print("menu_area: ", menu_area, "Mouse pos: ", mouse_pos)
+				if mouse_pos.x >= menu_area[0].x &&  mouse_pos.x <= menu_area[1].x:
+					if mouse_pos.y >= menu_area[0].y && mouse_pos.y <= menu_area[1].y:
+						pass
+					else:
+						menu_handler.close_current_menu()
+						menu_open = false
+						player_map_interaction(mouse_pos)
 		else:
 			if t_print: print("no menu on click")
 			player_map_interaction(mouse_pos)
@@ -69,16 +72,6 @@ func _process(delta):
 
 ####HANDLES ALL SIGNALS FROM DIFFERENT OBJECTS
 
-##
-# Called when the player makes a choice in their menu
-func _on_menu_choice_made(player_action, object):
-	if t_print: print("Main_hub recived choice: ", player_action, object)
-	menu_handler.close_current_menu()
-	menu_open = false
-	
-	if player_action == "Open":
-		print("opening container")
-		menu_handler.load_inventory_trade_menu(player, object)
 
 ##
 # Called whenever a player requests interaction information about a certain cell
@@ -91,5 +84,28 @@ func player_map_interaction(pos):
 		if cell_objects != null:
 			menu_handler.load_interaction_menu(pos, cell_objects)
 			menu_open = true
+			menu_type = "Interaction"
+
+			##
+# Called when the player makes a choice in their menu
+func _on_menu_choice_made(player_action, object):
+	if t_print: print("Main_hub received choice: ", player_action, object)
+	menu_handler.close_current_menu()
+	menu_open = false
+	
+	if player_action == "Open":
+		if t_print: print("opening container")
+		menu_open = true
+		menu_type = "Trade"
+		menu_handler.load_inventory_trade_menu(player, object)
 
 
+func _on_trade_completed():
+	if t_print: print("Trade complete signal received by main hub")
+	self.menu_open = false
+	self.menu_type = null
+
+func _on_menu_closed():
+	if t_print: print("Menu closed signal received by main hub")
+	self.menu_open = false
+	self.menu_type = null
