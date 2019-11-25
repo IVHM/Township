@@ -310,7 +310,7 @@ func calculate_road_type(map_pos):
 			update_astar(map_pos.x, map_pos.y)
 
 ##
-# Gets path between two points in the form of 
+# Gets path between two points in the form of VectorPool()
 func get_astar_path(start_pos, end_pos):
 	var world_start_pos = start_pos
 	start_pos = UTIL.map_pos_to_id(world_tilemap.world_to_map(start_pos))
@@ -324,7 +324,7 @@ func get_astar_path(start_pos, end_pos):
 	
 	return id_path_out
 
-			#
+			
 ##
 # Returns the astar_id_lookup entry for a given world position
 func get_cell_info(pos):

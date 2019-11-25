@@ -15,8 +15,6 @@ export var crnt_state = 0  # | 0         |   1   |   2             |
 export (Array) var animation_tags = ["stand_idle", "walk", "stand_idle_wag"]
 var crnt_path
 
-# SIGNALS
-signal pupper_path_request
 
 # TEST VARIABLES
 export var test_process = false
@@ -127,7 +125,7 @@ func _on_LeaderSearchTimer_timeout():
 ##
 # Emits a signal requesting a new path to player
 func request_new_path():
-	emit_signal("pupper_path_request", sprite.get_global_position(), leader.get_sprite_position(), self)
+	EVENTS.emit_signal("path_request", sprite.get_global_position(), leader.get_sprite_position(), self)
 
 ##
 #

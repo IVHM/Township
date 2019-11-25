@@ -15,7 +15,7 @@ var menu_type = null
 export (bool) var testing = false
 export (bool) var t_print = false
 
-
+##
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	world_map = get_node(world_map)
@@ -28,8 +28,9 @@ func _ready():
 	EVENTS.connect("menu_choice_made", self, "_on_menu_choice_made")
 	EVENTS.connect("menu_closed", self, "_on_menu_closed")
 	EVENTS.connect("trade_completed", self, "_on_trade_completed")
+	EVENTS.connect("path_request", self, "_on_path_request")
 
-
+##
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	########
@@ -70,7 +71,7 @@ func _process(delta):
 
 
 
-####HANDLES ALL SIGNALS FROM DIFFERENT OBJECTS
+
 
 
 ##
@@ -86,7 +87,14 @@ func player_map_interaction(pos):
 			menu_open = true
 			menu_type = "Interaction"
 
-			##
+
+#### SIGNALS FROM DIFFERENT OBJECTS
+func _on_path_request(start, end, object):
+	var new_path = map.get_astar_path(start, end)
+	object.update_path(new_path)
+
+
+##
 # Called when the player makes a choice in their menu
 func _on_menu_choice_made(player_action, object):
 	if t_print: print("Main_hub received choice: ", player_action, object)
@@ -99,12 +107,16 @@ func _on_menu_choice_made(player_action, object):
 		menu_type = "Trade"
 		menu_handler.load_inventory_trade_menu(player, object)
 
-
+##
+# Called when the player confirms a trade
 func _on_trade_completed():
 	if t_print: print("Trade complete signal received by main hub")
 	self.menu_open = false
 	self.menu_type = null
 
+
+##
+# Called when a player decides to close a menu
 func _on_menu_closed():
 	if t_print: print("Menu closed signal received by main hub")
 	self.menu_open = false

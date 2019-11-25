@@ -7,7 +7,11 @@ extends Node
 signal menu_closed
 signal menu_choice_made
 signal trade_completed
+signal interaction_choice
 
+
+#### MAP SIGNALS
+signal path_request
 
 
 #### PLAYER SIGNALS

@@ -131,13 +131,15 @@ func _on_ConfirmTrade_pressed():
 
 	EVENTS.emit_signal("trade_completed")
 ##
-# 
+# Handles when player choses to close menu
 func _on_CancelTrade_pressed():
 	self.visible = false
 	EVENTS.emit_signal("menu_closed", "trade")
 	
 	#do i need this?#clear_buttons()
 
+##
+# //TODO// add and remove buttons at will
 func add_buttons():
 	pass
 

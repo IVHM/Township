@@ -76,6 +76,8 @@ func _on_menu_closed(type):
 func get_current_menu_area():
 	return current_menu.get_area()
 
+##
+# Closes the players current menu
 func close_current_menu():
 	UTIL.remove_all_children(self)
 	current_menu = null

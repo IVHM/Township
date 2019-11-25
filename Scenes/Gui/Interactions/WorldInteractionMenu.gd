@@ -13,8 +13,7 @@ export (PackedScene) var interaction_btn
 var crnt_object = null
 var crnt_choices = []
 var crnt_buttons = []
-
-signal interaction_choice 
+ 
 
 
 ###TESTING VARS
@@ -87,13 +86,15 @@ func _on_choice_made(type, object):
 	if type != "Cancel":
 		print(type, owner, "button_pressed")
 		pop_up.hide()
-		emit_signal("interaction_choice", type, object)
+		EVENTS.emit_signal("interaction_choice", type, object)
 		
 	else:
 		pop_up.hide()
-		
+		EVENTS.menu_closed()
 
-
+##
+# Returns an array containing the position of the origin 
+# and bottom corner of the menu's bounding box
 func get_area():
 	return [pop_up.get_global_position(),
 			pop_up.get_global_position() + (pop_up_control.get_size() * pop_up_control.get_scale())]
