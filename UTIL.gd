@@ -11,8 +11,15 @@ func remove_all_children(node):
 			n.queue_free()
 
 
+
+
+
 #### MAP SCRIPTS
 
+##
+# Calculates the normal directional unit vector from crnt to trgt
+func calc_head(crnt, trgt):
+	return crnt.direction_to(trgt)
 ##
 # Translates the map tile's pos to it's correspoding astar point's id take sin a vector2 or two numbers
 func map_pos_to_id(i,j=null):
