@@ -1,10 +1,10 @@
 extends Node2D
 
 # Nodes handling the different systems in the game
-export (NodePath) var world_map
-export (NodePath) var object_handler
-export (NodePath) var menu_handler
-export (NodePath) var player
+export (NodePath) var WorldMap_handler
+export (NodePath) var Object_handler
+export (NodePath) var Menu_handler
+export (NodePath) var Player
 
 # Menu state variables
 var menu_open = false
@@ -18,13 +18,13 @@ export (bool) var t_print = false
 ##
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	world_map = get_node(world_map)
-	object_handler = get_node(object_handler)
-	menu_handler = get_node(menu_handler)
-	player = get_node(player)
+	WorldMap_handler = get_node(WorldMap_handler)
+	Object_handler = get_node(Object_handler)
+	Menu_handler = get_node(Menu_handler)
+	Player = get_node(Player)
 	
 	#### SIGNAL CONNECTIONS
-	#player.connect("player_map_call", self, "_on_player_map_call")
+	#Player.connect("Player_map_call", self, "_on_Player_map_call")
 	EVENTS.connect("menu_choice_made", self, "_on_menu_choice_made")
 	EVENTS.connect("menu_closed", self, "_on_menu_closed")
 	EVENTS.connect("trade_completed", self, "_on_trade_completed")
@@ -42,13 +42,13 @@ func _process(delta):
 		if menu_open:
 			if t_print: print("menu on click")
 			if menu_type != "Trade":
-				var menu_area = menu_handler.get_current_menu_area()
+				var menu_area = Menu_handler.get_current_menu_area()
 				if t_print: print("menu_area: ", menu_area, "Mouse pos: ", mouse_pos)
 				if mouse_pos.x >= menu_area[0].x &&  mouse_pos.x <= menu_area[1].x:
 					if mouse_pos.y >= menu_area[0].y && mouse_pos.y <= menu_area[1].y:
 						pass
 					else:
-						menu_handler.close_current_menu()
+						Menu_handler.close_current_menu()
 						menu_open = false
 						player_map_interaction(mouse_pos)
 		else:
@@ -67,7 +67,7 @@ func _process(delta):
 	if Input.is_action_pressed("ui_down"):	movement_vector.y += 1	 
 	if Input.is_action_pressed("ui_right"):	movement_vector.x += 1
 	
-	player.move_player(movement_vector, delta)
+	Player.move_player(movement_vector, delta)
 
 
 
@@ -79,18 +79,18 @@ func _process(delta):
 func player_map_interaction(pos):
 	if t_print: print("player_map_call")
 	if pos.x > 0 && pos.y > 0: 
-		var cell_type = world_map.get_cell_info(pos)
-		var cell_objects = object_handler.check_cell(pos, null, true)
+		var cell_type = WorldMap_handler.get_cell_info(pos)
+		var cell_objects = Object_handler.check_cell(pos, null, true)
 		if t_print: print(cell_objects)
 		if cell_objects != null:
-			menu_handler.load_interaction_menu(pos, cell_objects)
+			Menu_handler.load_interaction_menu(pos, cell_objects)
 			menu_open = true
 			menu_type = "Interaction"
 
 
 #### SIGNALS FROM DIFFERENT OBJECTS
 func _on_path_request(start, end, object):
-	var new_path = map.get_astar_path(start, end)
+	var new_path = WorldMap_handler.get_astar_path(start, end)
 	object.update_path(new_path)
 
 
@@ -98,14 +98,14 @@ func _on_path_request(start, end, object):
 # Called when the player makes a choice in their menu
 func _on_menu_choice_made(player_action, object):
 	if t_print: print("Main_hub received choice: ", player_action, object)
-	menu_handler.close_current_menu()
+	Menu_handler.close_current_menu()
 	menu_open = false
 	
 	if player_action == "Open":
 		if t_print: print("opening container")
 		menu_open = true
 		menu_type = "Trade"
-		menu_handler.load_inventory_trade_menu(player, object)
+		Menu_handler.load_inventory_trade_menu(Player, object)
 
 ##
 # Called when the player confirms a trade
