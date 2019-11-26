@@ -1,0 +1,131 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Legacy/TESTS/Kinematic_follower_and_obstacles/Code testing.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Map/Map.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/Nat_Materials/Stone/001/stone_breaking1.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Pupper/Happy pup5.png" type="Texture" id=4]
+
+[sub_resource type="PhysicsMaterial" id=4]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 6.64109
+
+[sub_resource type="PhysicsMaterial" id=5]
+friction = 0.0
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 4.32771
+height = 5.94849
+
+[sub_resource type="PhysicsMaterial" id=6]
+friction = 0.0
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 4.45643, 7.67008 )
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 7.16839
+height = 14.5172
+
+[node name="Code testing" type="Node2D"]
+position = Vector2( 0.715988, -1.79 )
+script = ExtResource( 1 )
+Follower = NodePath("KinematicBody2D")
+StuckTimer = null
+start_pos = null
+speed = 50
+test_map = NodePath("Map")
+PathViz = NodePath("Line2D")
+testing = true
+t_print = null
+test_dest = null
+
+[node name="Map" parent="." instance=ExtResource( 2 )]
+position = Vector2( 0, 0 )
+rotation = -7.45058e-09
+t_print = true
+
+[node name="CircleBody" type="StaticBody2D" parent="."]
+editor/display_folded = true
+position = Vector2( 37.1433, 34.8337 )
+rotation = 2.21815
+collision_mask = 0
+physics_material_override = SubResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CircleBody"]
+position = Vector2( -0.714066, 1.94327 )
+scale = Vector2( 2.82878, 2.70045 )
+shape = SubResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="CircleBody"]
+position = Vector2( -0.3367, 0.811214 )
+scale = Vector2( 2.82878, 2.70045 )
+texture = ExtResource( 3 )
+
+[node name="CapsuleBody" type="StaticBody2D" parent="."]
+editor/display_folded = true
+position = Vector2( -12.4736, 91.2298 )
+rotation = 1.12468
+collision_mask = 0
+physics_material_override = SubResource( 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CapsuleBody"]
+position = Vector2( -0.714066, 1.94327 )
+scale = Vector2( 2.82878, 2.70045 )
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="CapsuleBody"]
+position = Vector2( -0.3367, 0.811214 )
+scale = Vector2( 2.82878, 2.70045 )
+texture = ExtResource( 3 )
+
+[node name="SquareBody" type="StaticBody2D" parent="."]
+editor/display_folded = true
+position = Vector2( 39.3292, 126.512 )
+rotation = 1.56775
+collision_mask = 0
+physics_material_override = SubResource( 6 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SquareBody"]
+position = Vector2( -0.714066, 1.94327 )
+scale = Vector2( 2.82878, 2.70045 )
+shape = SubResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="SquareBody"]
+position = Vector2( -0.3367, 0.811214 )
+scale = Vector2( 2.82878, 2.70045 )
+texture = ExtResource( 3 )
+
+[node name="Line2D" type="Line2D" parent="."]
+rotation = 0.0284956
+scale = Vector2( 1, 1 )
+width = 1.0
+default_color = Color( 0.4, 0.717647, 1, 1 )
+texture_mode = 16393736
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+rotation = 0.0284956
+scale = Vector2( 1, 1 )
+collision/safe_margin = 0.12
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+position = Vector2( 1.2852, 1.8107 )
+scale = Vector2( 2.3368, 2.50364 )
+texture = ExtResource( 4 )
+
+[node name="StuckTimer" type="Timer" parent="KinematicBody2D"]
+wait_time = 0.2
+[connection signal="timeout" from="KinematicBody2D/StuckTimer" to="." method="_on_StuckTimer_timeout"]

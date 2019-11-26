@@ -38,6 +38,7 @@ var rnd = RandomNumberGenerator.new()
 
 ##
 # TESTING GENERATION VARIABLES
+export var t_print = false
 export var generating = false
 var generated = false
 onready var testing_timer = $Timer
@@ -126,6 +127,7 @@ func generate_blank_map():
 			world_tilemap.set_cell(i, j, rnd_grass_tile_id)
 
 			update_astar(i,j)
+	if t_print: print("Blank map generated.")
 	initialize_connections()
 
 
@@ -151,24 +153,20 @@ func update_astar(i,j):
 func initialize_connections():
 	# Conects a cell with its valid neighbors.
 	for crnt_id in self.astar_id_lookup:
-		# THIS WILL NOT WORK RIGHT MUST FIND FIX
-		var crnt_pos = self.astar_id_lookup[crnt_id][0]
 
-		var neighbors = get_cell_neighbors(crnt_pos)
+		var crnt_pos = self.astar_id_lookup[crnt_id][0]
+		var neighbors = get_cell_neighbors(crnt_pos, true)
 		
 		for crnt_neighbor in neighbors:
 			if crnt_neighbor != null:
-				var n_tile_type = self.astar_id_lookup[UTIL.map_pos_to_id(crnt_pos.x, crnt_pos.y)][1]
+				var n_tile_type = self.astar_id_lookup[crnt_id][1]
 				if n_tile_type == "Tile":
 					pass
-				elif crnt_neighbor.x < 0 || crnt_neighbor.y < 0 || crnt_neighbor.x >= size.x || crnt_neighbor.y >= size.y:
-					pass
-				elif self.astar_id_lookup[UTIL.map_pos_to_id(crnt_neighbor.x, crnt_neighbor.y)][1] == "Tile":
+				elif self.astar_id_lookup[crnt_neighbor][1] == "Tile":
 					pass
 				else:
-					astar.connect_points(crnt_id, UTIL.map_pos_to_id(crnt_neighbor.x,
-																		   crnt_neighbor.y))
-
+					astar.connect_points(crnt_id, crnt_neighbor)
+					
 func update_connections(i,j):
 	var id = UTIL.map_pos_to_id(i, j)
 	var neighbors = get_cell_neighbors(Vector2(i, j), true)
@@ -190,6 +188,7 @@ func get_cell_neighbors(pos, output_ID=false):
 	for i in range(len(output)):
 		if output[i].x < 0 || output[i].y < 0 || output[i].x >= size.x || output[i].y >= size.y:
 			output[i] = null
+	# Check if the user wants the pos as id and translate
 	if output_ID:
 		for i in range(len(output)):
 			if output[i] != null:
@@ -313,16 +312,19 @@ func calculate_road_type(map_pos):
 # Gets path between two points in the form of VectorPool()
 func get_astar_path(start_pos, end_pos):
 	var world_start_pos = start_pos
-	start_pos = UTIL.map_pos_to_id(world_tilemap.world_to_map(start_pos))
-	end_pos = UTIL.map_pos_to_id(world_tilemap.world_to_map(end_pos))
+	start_pos = UTIL.world_pos_to_id(start_pos)
+	end_pos = UTIL.world_pos_to_id(end_pos)
+	# Get the calulated astar path to the destination in astar_id format
 	var id_path = astar.get_id_path(start_pos, end_pos)
-	print(id_path)
-	var id_path_out = []
-	id_path_out.append(world_start_pos)
-	for i in range(1,len(id_path)):
-		id_path_out.append(astar_id_lookup[id_path[i]][4])
+	if t_print: print("From: ", start_pos, " To: ", end_pos); print("Id path: ",id_path)
 	
-	return id_path_out
+	
+	var world_path_out = []
+	world_path_out.append(world_start_pos)
+	for i in range(1,len(id_path)):
+		world_path_out.append(astar_id_lookup[id_path[i]][4]) # Translate all the ids into their world_pos through the lookup
+	
+	return world_path_out
 
 			
 ##
