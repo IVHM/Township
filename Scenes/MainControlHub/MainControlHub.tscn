@@ -11,10 +11,6 @@
 [node name="MainControlHub" type="Node2D"]
 position = Vector2( -0.4003, 0 )
 script = ExtResource( 1 )
-world_map = NodePath("Map")
-object_handler = NodePath("MapObjects_handler")
-menu_handler = NodePath("Menu_handler")
-player = NodePath("Player")
 t_print = true
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
@@ -22,6 +18,10 @@ size = Vector2( 64, 64 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( 1.02667, -2.05337 )
+Sprite = NodePath("")
+RotationControl = NodePath("")
+InteractionTimer = NodePath("")
+MiningTimer = NodePath("")
 
 [node name="MainCamera" parent="Player" instance=ExtResource( 4 )]
 anchor_mode = 1

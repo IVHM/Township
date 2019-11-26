@@ -25,10 +25,6 @@ scale = Vector2( 1, 1.19199 )
 script = ExtResource( 1 )
 speed = 50
 rotation_speed = 2.3
-Sprite = NodePath("AnimatedSprite")
-RotationControl = NodePath("AnimatedSprite/RotationalControl")
-InteractionTimer = NodePath("InteractionTimer")
-MiningTimer = NodePath("MiningTimer")
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 editor/display_folded = true

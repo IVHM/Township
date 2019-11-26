@@ -15,6 +15,6 @@ signal path_request
 
 
 #### PLAYER SIGNALS
-signal player_path_request
+signal player_path_requested
 signal player_map_call
 signal player_menu_request
