@@ -19,8 +19,11 @@ var heading
 #### TESTING
 export var testing = false
 export var t_print = false 
+signal path_completed
 
-export (NodePath) var test_line 
+
+
+
 func _ready():
 	pass
 
@@ -38,7 +41,7 @@ func _process(delta):
 				crnt_point += 1
 				next_point += 1
 			
-			self.set_global_rotation(heading.get_angle())
+			self.set_global_rotation(heading.angle())
 			self.move_and_slide(movement_vec)
 
 ##
@@ -55,7 +58,7 @@ func create_path(new_path):
 # takes in the requested path and stores it 
 func update_path(new_path):
 	requested_path = new_path
-	if t_print: print("Requested path updated: \n", requested_path)
+	#if t_print: print("Requested path updated: \n", requested_path)
 ##
 # Goes through the path and makes sure there are no collisions a 
 func check_path(start, end):
@@ -68,11 +71,22 @@ func check_path(start, end):
 	while !path_clear:
 		path_request(safe_point, end)  # Request a new path from the last safe point 
 		
-		for i in range(len(requested_path)):  # Runs through each point in requested_path 
-			if collision_detect(requested_path[i], requested_path[i+1]): # And checks to see if collision occurs between it and the next in libe
-				#print("path collision detected")
+		for i in range(len(requested_path)-1):  # Runs through each point in requested_path 
+
+			if len(requested_path) == 1:
+				calculated_path.append(requested_path[0])
+				current_path = calculated_path   # Set the current path
+				calculated_path = PoolVector2Array() # reset 
+				moving = true
+				path_clear = true
+				print("legal path created")
+				emit_signal("path_completed", current_path)
+				break
+
+			elif collision_detect(requested_path[i], requested_path[i+1]): # And checks to see if collision occurs between it and the next in libe
+				print("path collision detected")
 				safe_point = requested_path[i]                           # If so it sets a new safe point
-				for j in range(i+1):                                     # And adds all the already checked points to the calculated_path
+				for j in range(i):                                     # And adds all the already checked points to the calculated_path
 					calculated_path.append(requested_path[j])
 
 				var rel_vec = requested_path[i+1] - requested_path[i]    # Now we try to calculate a new collision free path
@@ -100,17 +114,11 @@ func check_path(start, end):
 				break
 
 			# If there were no collisions detected and the next point is the end
-			elif requested_path[i+1] == end:
-				for c_pnt in requested_path:   # Update the calculated_path witht the new points
-					calculated_path.append(c_pnt)
-				current_path = calculated_path   # Set the current path
-				calculated_path = PoolVector2Array() # reset 
-				moving = true
-				path_clear = true
-				print("legal path created")
+		if path_clear:
+			break	
 		while_cnt += 1
-		if while_cnt>100:
-			print("while ran for a while", calculated_path)
+		if while_cnt>200:
+			print("while ran for a while", calculated_path, current_path)
 			break
 					
 ##
@@ -118,3 +126,7 @@ func check_path(start, end):
 func collision_detect(start, end):
 	var rel_vec = end - start
 	return self.test_move(self.get_transform(), rel_vec)
+
+
+##
+

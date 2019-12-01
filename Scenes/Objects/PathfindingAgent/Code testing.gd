@@ -25,6 +25,8 @@ func _ready():
 	Follower = get_node(Follower)
 	Follower.set_position(start_pos)
 
+	EVENTS.connect("path_request", self, "_on_path_request")
+	Follower.connect("path_completed", self, "_on_path_completed")
 	if t_print: print("intial load done")
 	if testing:
 		PathViz = get_node(PathViz)
@@ -43,5 +45,12 @@ func _process(delta):
 			print( "follower:", Follower)
 
 			first_run = false
-#func _on_StuckTimer_timeout():
-#	pos_difference = 	
+
+func _on_path_request(start, end, body):
+	var new_path = test_map.get_astar_path(start, end)
+	#print("path request: ", new_path)
+	body.update_path(new_path)
+
+func _on_path_completed(path_out):
+	print("path completed signal recieved"	, path_out)
+	PathViz.set_points(path_out)

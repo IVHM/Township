@@ -29,12 +29,12 @@ position = Vector2( 0.715988, -1.79 )
 script = ExtResource( 1 )
 Follower = NodePath("Agent")
 test_map = NodePath("Map")
+PathViz = NodePath("Line2D")
 testing = true
 
 [node name="Map" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, 0 )
 rotation = -7.45058e-09
-t_print = true
 
 [node name="CircleBody" type="StaticBody2D" parent="."]
 editor/display_folded = true
@@ -78,7 +78,7 @@ texture = ExtResource( 3 )
 
 [node name="SquareBody" type="StaticBody2D" parent="."]
 editor/display_folded = true
-position = Vector2( 39.3292, 126.512 )
+position = Vector2( 34.9175, 126.512 )
 rotation = 1.56775
 collision_mask = 0
 physics_material_override = SubResource( 5 )
@@ -96,13 +96,12 @@ position = Vector2( -0.3367, 0.811214 )
 scale = Vector2( 2.82878, 2.70045 )
 texture = ExtResource( 3 )
 
-[node name="Line2D" type="Line2D" parent="."]
-rotation = 0.0284956
-width = 1.0
-default_color = Color( 0.4, 0.717647, 1, 1 )
-texture_mode = 16393736
-
 [node name="Agent" parent="." instance=ExtResource( 4 )]
 position = Vector2( 0.714958, 4.56239 )
 t_print = true
-test_line = NodePath("")
+
+[node name="Line2D" type="Line2D" parent="."]
+rotation = 0.0284956
+width = 2.0
+default_color = Color( 0.996078, 0.4, 1, 1 )
+texture_mode = 16393736
